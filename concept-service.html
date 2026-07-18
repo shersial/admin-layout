@@ -49,7 +49,9 @@
       }
     </style>
   </head>
-  <body class="service-command min-h-screen bg-night font-[Inter] text-[#eef2eb] antialiased">
+  <body
+    class="service-command min-h-screen bg-night font-[Inter] text-[#eef2eb] antialiased"
+  >
     <div class="flex min-h-screen">
       <aside
         id="rail"
@@ -118,6 +120,7 @@
         <div class="mt-auto">
           <button
             id="quickHelp"
+            data-tip="Need a hand?"
             class="group relative flex h-16 w-full flex-col items-center justify-center rounded-xl text-center text-white/45 hover:bg-white/5 hover:text-white lg:px-3"
           >
             <i class="icon-circle-help text-lg"></i
@@ -784,6 +787,47 @@
     <script>
       const $ = (s) => document.querySelector(s),
         show = (el, on) => el.classList.toggle("hidden", !on);
+      document.querySelectorAll("[data-tip]").forEach((item, index) => {
+        const tooltip = document.createElement("span");
+        const tooltipId = `service-tooltip-${index}`;
+        tooltip.id = tooltipId;
+        tooltip.setAttribute("role", "tooltip");
+        tooltip.className =
+          "pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap border border-line bg-panel px-3 py-2 text-xs font-medium text-white opacity-0 invisible shadow-glow transition-opacity duration-150";
+        tooltip.innerHTML = `<span>${item.dataset.tip}</span><span class="absolute right-full top-1/2 -translate-y-1/2 border-y-4 border-r-4 border-y-transparent border-r-panel"></span>`;
+        item.setAttribute("aria-describedby", tooltipId);
+        item.append(tooltip);
+        let hideTimer;
+        let touchArmed = false;
+        const hideTip = () => {
+          tooltip.classList.add("invisible", "opacity-0");
+          tooltip.classList.remove("opacity-100");
+        };
+        const showTip = () => {
+          clearTimeout(hideTimer);
+          tooltip.classList.remove("invisible", "opacity-0");
+          tooltip.classList.add("opacity-100");
+        };
+        item.addEventListener("pointerenter", showTip);
+        item.addEventListener("pointerleave", hideTip);
+        item.addEventListener("focusin", showTip);
+        item.addEventListener("focusout", hideTip);
+        item.addEventListener(
+          "touchstart",
+          (event) => {
+            if (!window.matchMedia("(hover: none)").matches || touchArmed)
+              return;
+            event.preventDefault();
+            touchArmed = true;
+            showTip();
+            hideTimer = setTimeout(() => {
+              touchArmed = false;
+              hideTip();
+            }, 2200);
+          },
+          { passive: false },
+        );
+      });
       $("#alertButton").onclick = () =>
         show($("#alertPanel"), $("#alertPanel").classList.contains("hidden"));
       $("#notes").onclick = () => {
