@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Intelligence | OrderPortal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: "#102448",
+              blue: "#385c9d",
+              mist: "#e4ecff",
+              coral: "#ff735d",
+              cream: "#faf9f5",
+              ink: "#202735",
+            },
+            boxShadow: { soft: "0 18px 45px rgba(16,36,72,.08)" },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/lucide-static@0.468.0/font/lucide.css"
+    />
+  </head>
+  <body class="min-h-screen bg-cream font-[DM_Sans] text-ink antialiased">
+    <header
+      class="sticky top-0 z-40 border-b border-navy/10 bg-cream/95 backdrop-blur"
+    >
+      <div
+        class="mx-auto flex h-[74px] max-w-[1600px] items-center gap-5 px-5 md:px-8"
+      >
+        <a
+          class="flex items-center gap-2 font-[Space_Grotesk] text-lg font-bold text-navy"
+            href="index.html"
+          ><span
+            class="grid h-8 w-8 place-items-center rounded-full bg-navy text-sm text-mist"
+            >O</span
+          >Order<span class="text-coral">Portal</span></a
+        >
+        <nav class="hidden h-full items-center gap-1 lg:flex">
+          <a
+            class="border-b-2 border-navy px-3 py-6 text-sm font-bold text-navy"
+            href="#overview"
+            >Overview</a
+          ><a
+            class="px-3 py-6 text-sm text-navy/60 hover:text-navy"
+            href="#performance"
+            >Performance</a
+          ><a
+            class="px-3 py-6 text-sm text-navy/60 hover:text-navy"
+            href="#guests"
+            >Guests</a
+          ><a
+            class="px-3 py-6 text-sm text-navy/60 hover:text-navy"
+            href="#planning"
+            >Planning</a
+          >
+        </nav>
+        <div class="ml-auto flex items-center gap-2">
+          <button
+            id="globalSearch"
+            class="hidden items-center gap-2 rounded-full bg-white px-4 py-2 text-xs text-navy/45 shadow-sm md:flex"
+          >
+            <i class="icon-search"></i>Search insights
+            <kbd
+              class="rounded bg-mist px-1.5 py-0.5 font-[DM_Mono] text-[10px]"
+              >⌘ K</kbd
+            ></button
+          ><button
+            id="notice"
+            class="relative grid h-9 w-9 place-items-center rounded-full bg-white text-navy shadow-sm"
+          >
+            <i class="icon-bell"></i
+            ><span
+              class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-cream bg-coral"
+            ></span></button
+          ><button
+            id="account"
+            class="grid h-9 w-9 place-items-center rounded-full bg-navy font-[DM_Mono] text-[10px] text-mist"
+          >
+            AK
+          </button>
+        </div>
+        <div
+          id="noticePanel"
+          class="absolute right-5 top-[62px] hidden w-80 rounded-2xl border border-navy/10 bg-white p-3 shadow-soft md:right-8"
+        >
+          <div
+            class="flex items-center justify-between border-b border-navy/10 pb-3"
+          >
+            <strong class="text-sm text-navy">Intelligence alerts</strong
+            ><span class="font-[DM_Mono] text-[10px] text-coral">2 NEW</span>
+          </div>
+          <a
+            class="mt-1 flex gap-3 rounded-xl p-2 hover:bg-mist/50"
+            href="#planning"
+            ><span
+              class="grid h-9 w-9 place-items-center rounded-lg bg-[#fff0eb] text-coral"
+              ><i class="icon-trending-down"></i></span
+            ><span
+              ><strong class="block text-xs">Saturday forecast softened</strong
+              ><small class="mt-1 block text-[11px] text-navy/55"
+                >Covers are 8% below last week</small
+              ></span
+            ></a
+          ><a class="flex gap-3 rounded-xl p-2 hover:bg-mist/50" href="#guests"
+            ><span
+              class="grid h-9 w-9 place-items-center rounded-lg bg-mist text-blue"
+              ><i class="icon-sparkles"></i></span
+            ><span
+              ><strong class="block text-xs">VIP return rate climbed</strong
+              ><small class="mt-1 block text-[11px] text-navy/55"
+                >Up 14% in the past 30 days</small
+              ></span
+            ></a
+          >
+        </div>
+      </div>
+    </header>
+    <div class="mx-auto max-w-[1600px] px-5 py-7 md:px-8">
+      <section
+        class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
+      >
+        <div>
+          <div
+            class="flex items-center gap-2 font-[DM_Mono] text-[10px] uppercase tracking-[.15em] text-blue"
+          >
+            <span class="h-2 w-2 rounded-full bg-coral"></span>Group
+            intelligence / July 2026
+          </div>
+          <h1
+            class="mt-3 font-[Space_Grotesk] text-4xl font-bold tracking-[-.06em] text-navy md:text-5xl"
+          >
+            The bigger picture,<br class="hidden md:block" />
+            beautifully clear.
+          </h1>
+        </div>
+        <div class="flex gap-2">
+          <button
+            id="range"
+            class="rounded-full border border-navy/15 bg-white px-4 py-2.5 text-xs font-semibold text-navy"
+          >
+            Last 30 days <i class="icon-chevron-down ml-1"></i></button
+          ><button
+            id="export"
+            class="rounded-full bg-navy px-4 py-2.5 text-xs font-bold text-white"
+          >
+            <i class="icon-download mr-1"></i>Export report
+          </button>
+        </div>
+      </section>
+      <section class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl bg-navy p-5 text-white shadow-soft">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-mist/70"
+          >
+            Net sales
+          </p>
+          <strong
+            class="mt-3 block font-[Space_Grotesk] text-4xl font-bold tracking-tight"
+            >£128.4k</strong
+          >
+          <p class="mt-5 text-xs text-mist">
+            <b class="text-[#c4ff81]">+12.8%</b> against previous period
+          </p>
+        </article>
+        <article class="rounded-2xl bg-white p-5 shadow-soft">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-navy/45"
+          >
+            Average check
+          </p>
+          <strong
+            class="mt-3 block font-[Space_Grotesk] text-4xl font-bold tracking-tight text-navy"
+            >£34.60</strong
+          >
+          <p class="mt-5 text-xs text-navy/55">
+            <b class="text-[#35835c]">+£2.10</b> higher than baseline
+          </p>
+        </article>
+        <article class="rounded-2xl bg-mist p-5 shadow-soft">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-blue"
+          >
+            Repeat guest rate
+          </p>
+          <strong
+            class="mt-3 block font-[Space_Grotesk] text-4xl font-bold tracking-tight text-navy"
+            >38.2%</strong
+          >
+          <p class="mt-5 text-xs text-navy/60">
+            <b class="text-blue">+4.6 pts</b> from loyalty activity
+          </p>
+        </article>
+        <article class="rounded-2xl bg-[#fff0eb] p-5 shadow-soft">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-coral"
+          >
+            Margin watch
+          </p>
+          <strong
+            class="mt-3 block font-[Space_Grotesk] text-4xl font-bold tracking-tight text-navy"
+            >71.4%</strong
+          >
+          <p class="mt-5 text-xs text-navy/60">
+            Food cost is <b class="text-coral">1.2 pts</b> above plan
+          </p>
+        </article>
+      </section>
+      <section class="mt-5 grid gap-5 xl:grid-cols-[1.2fr_.8fr]" id="overview">
+        <article class="rounded-3xl bg-white p-5 shadow-soft md:p-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-blue"
+              >
+                Revenue velocity
+              </p>
+              <h2
+                class="mt-1 font-[Space_Grotesk] text-2xl font-bold text-navy"
+              >
+                Sales have found their rhythm.
+              </h2>
+            </div>
+            <button
+              class="rounded-full bg-mist px-3 py-1.5 text-[11px] font-bold text-blue"
+            >
+              Net sales
+            </button>
+          </div>
+          <div class="mt-7 flex items-end justify-between">
+            <div>
+              <strong
+                class="font-[Space_Grotesk] text-4xl font-bold tracking-tight text-navy"
+                >£32,480</strong
+              ><span class="ml-2 text-xs text-navy/45">this week</span>
+            </div>
+            <span
+              class="rounded-full bg-[#e8f5ec] px-2 py-1 text-[10px] font-bold text-[#35835c]"
+              ><i class="icon-trending-up mr-1"></i>12.4%</span
+            >
+          </div>
+          <div class="relative mt-7 h-52 overflow-hidden">
+            <div
+              class="absolute inset-x-0 top-0 h-full border-b border-dashed border-navy/10 bg-[linear-gradient(to_bottom,transparent_32%,rgba(16,36,72,.08)_33%,transparent_34%,transparent_65%,rgba(16,36,72,.08)_66%,transparent_67%)]"
+            ></div>
+            <svg
+              class="absolute inset-x-0 bottom-5 h-44 w-full"
+              viewBox="0 0 800 180"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <linearGradient id="a" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#385c9d" stop-opacity=".23" />
+                  <stop offset="1" stop-color="#385c9d" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M0 135 C55 122 75 143 125 114 S188 100 220 116 S270 89 312 97 S365 65 410 82 S464 66 501 73 S550 39 590 52 S648 22 690 37 S740 30 800 8 V180 H0Z"
+                fill="url(#a)"
+              />
+              <path
+                d="M0 135 C55 122 75 143 125 114 S188 100 220 116 S270 89 312 97 S365 65 410 82 S464 66 501 73 S550 39 590 52 S648 22 690 37 S740 30 800 8"
+                fill="none"
+                stroke="#385c9d"
+                stroke-width="3"
+              />
+            </svg>
+            <div
+              class="absolute inset-x-0 bottom-0 flex justify-between font-[DM_Mono] text-[10px] text-navy/35"
+            >
+              <span>MON</span><span>TUE</span><span>WED</span><span>THU</span
+              ><span>FRI</span><span>SAT</span><span>SUN</span>
+            </div>
+          </div>
+        </article>
+        <article class="rounded-3xl bg-[#ff735d] p-6 text-navy shadow-soft">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-navy/60"
+          >
+            Your next move
+          </p>
+          <h2
+            class="mt-2 max-w-xs font-[Space_Grotesk] text-3xl font-bold leading-tight tracking-[-.05em]"
+          >
+            Make Saturday feel less quiet.
+          </h2>
+          <p class="mt-5 max-w-sm text-sm leading-relaxed text-navy/75">
+            Reservations forecast 8% below normal. A targeted lunch offer could
+            recover an estimated £1,940.
+          </p>
+          <div class="mt-7 flex gap-2">
+            <button
+              id="campaign"
+              class="rounded-full bg-navy px-4 py-2.5 text-xs font-bold text-white"
+            >
+              Build campaign</button
+            ><button
+              class="rounded-full border border-navy/25 px-4 py-2.5 text-xs font-bold"
+            >
+              View forecast
+            </button>
+          </div>
+        </article>
+      </section>
+      <section class="mt-5 grid gap-5 lg:grid-cols-3">
+        <article class="rounded-3xl bg-white p-5 shadow-soft" id="performance">
+          <div class="flex items-center justify-between">
+            <div>
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-blue"
+              >
+                Branch radar
+              </p>
+              <h2 class="mt-1 font-[Space_Grotesk] text-xl font-bold text-navy">
+                Where momentum lives
+              </h2>
+            </div>
+            <i class="icon-map-pin text-blue"></i>
+          </div>
+          <div class="mt-5 space-y-4">
+            <div>
+              <div class="flex justify-between text-xs">
+                <strong>Shoreditch</strong><b class="text-[#35835c]">+18%</b>
+              </div>
+              <div class="mt-2 h-2 rounded-full bg-mist">
+                <i class="block h-full w-[88%] rounded-full bg-navy"></i>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs">
+                <strong>Soho</strong><b class="text-[#35835c]">+9%</b>
+              </div>
+              <div class="mt-2 h-2 rounded-full bg-mist">
+                <i class="block h-full w-[71%] rounded-full bg-blue"></i>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs">
+                <strong>Notting Hill</strong><b class="text-coral">-3%</b>
+              </div>
+              <div class="mt-2 h-2 rounded-full bg-mist">
+                <i class="block h-full w-[45%] rounded-full bg-coral"></i>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article
+          class="rounded-3xl bg-navy p-5 text-white shadow-soft"
+          id="guests"
+        >
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-mist/60"
+          >
+            Guest intelligence
+          </p>
+          <h2 class="mt-1 font-[Space_Grotesk] text-xl font-bold">
+            Regulars bring friends.
+          </h2>
+          <div class="mt-7 flex items-end gap-5">
+            <strong
+              class="font-[Space_Grotesk] text-5xl font-bold text-[#c4ff81]"
+              >2.4×</strong
+            >
+            <p class="max-w-[9rem] text-xs leading-relaxed text-mist/65">
+              More likely to refer when a visit is logged.
+            </p>
+          </div>
+          <button class="mt-7 text-xs font-bold text-[#c4ff81]">
+            Explore guest cohorts <i class="icon-arrow-right"></i>
+          </button>
+        </article>
+        <article class="rounded-3xl bg-mist p-5 shadow-soft" id="planning">
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-blue"
+          >
+            Planning signal
+          </p>
+          <h2 class="mt-1 font-[Space_Grotesk] text-xl font-bold text-navy">
+            Staffing is tight on Friday.
+          </h2>
+          <p class="mt-4 text-sm leading-relaxed text-navy/65">
+            Service demand suggests adding one runner from 18:30 to protect turn
+            times.
+          </p>
+          <button
+            class="mt-6 rounded-full bg-white px-4 py-2 text-xs font-bold text-navy shadow-sm"
+          >
+            View rota scenario
+          </button>
+        </article>
+      </section>
+    </div>
+    <div
+      id="searchOverlay"
+      class="fixed inset-0 z-50 hidden bg-navy/30 p-4 backdrop-blur-sm"
+    >
+      <div class="mx-auto mt-20 max-w-xl rounded-2xl bg-white p-4 shadow-soft">
+        <label class="flex items-center gap-3 border-b border-navy/10 pb-3"
+          ><i class="icon-search text-blue"></i
+          ><input
+            id="searchField"
+            class="w-full text-sm outline-none"
+            autofocus
+            placeholder="Search branches, metrics, guests..."
+        /></label>
+        <p
+          class="pt-4 font-[DM_Mono] text-[10px] uppercase tracking-wider text-navy/40"
+        >
+          Suggested intelligence
+        </p>
+        <a
+          class="mt-2 block rounded-xl p-3 text-sm hover:bg-mist"
+          href="#guests"
+          >Repeat guest rate at Shoreditch
+          <span class="float-right text-blue">38.2%</span></a
+        ><a class="block rounded-xl p-3 text-sm hover:bg-mist" href="#planning"
+          >Saturday lunch forecast
+          <span class="float-right text-coral">Below target</span></a
+        >
+      </div>
+    </div>
+    <div
+      id="campaignPanel"
+      class="fixed inset-y-0 right-0 z-50 w-full max-w-md translate-x-full bg-white p-6 shadow-2xl transition-transform"
+    >
+      <div class="flex justify-between">
+        <div>
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-coral"
+          >
+            Campaign builder
+          </p>
+          <h2 class="mt-1 font-[Space_Grotesk] text-2xl font-bold text-navy">
+            Recover Saturday.
+          </h2>
+        </div>
+        <button
+          id="closeCampaign"
+          class="grid h-9 w-9 place-items-center rounded-lg hover:bg-mist"
+        >
+          <i class="icon-x"></i>
+        </button>
+      </div>
+      <label class="mt-8 block text-xs font-bold text-navy"
+        >Audience<select
+          class="mt-2 w-full rounded-xl border border-navy/15 p-3 text-sm"
+        >
+          <option>Shoreditch regulars · 2,102 guests</option>
+        </select></label
+      ><label class="mt-5 block text-xs font-bold text-navy"
+        >Offer<textarea
+          class="mt-2 h-24 w-full rounded-xl border border-navy/15 p-3 text-sm"
+        >
+Enjoy a complimentary side with lunch this Saturday.</textarea></label
+      ><button
+        class="mt-6 w-full rounded-full bg-navy py-3 text-sm font-bold text-white"
+      >
+        Review campaign
+      </button>
+    </div>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        toggle = (x, on) => x.classList.toggle("hidden", !on);
+      $("#notice").onclick = () =>
+        toggle(
+          $("#noticePanel"),
+          $("#noticePanel").classList.contains("hidden"),
+        );
+      $("#globalSearch").onclick = () => toggle($("#searchOverlay"), true);
+      document.onkeydown = (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+          e.preventDefault();
+          toggle($("#searchOverlay"), true);
+        }
+        if (e.key === "Escape") toggle($("#searchOverlay"), false);
+      };
+      $("#searchOverlay").onclick = (e) => {
+        if (e.target === $("#searchOverlay"))
+          toggle($("#searchOverlay"), false);
+      };
+      $("#campaign").onclick = () =>
+        $("#campaignPanel").classList.remove("translate-x-full");
+      $("#closeCampaign").onclick = () =>
+        $("#campaignPanel").classList.add("translate-x-full");
+      document.onclick = (e) => {
+        if (!e.target.closest("#notice,#noticePanel"))
+          toggle($("#noticePanel"), false);
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Command Centre | OrderPortal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              night: "#101417",
+              panel: "#181e22",
+              line: "#293236",
+              acid: "#e5ff5a",
+              signal: "#ff624b",
+              sky: "#5ab8ff",
+            },
+            boxShadow: {
+              glow: "0 0 0 1px rgba(229,255,90,.16),0 16px 40px rgba(0,0,0,.25)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/lucide-static@0.468.0/font/lucide.css"
+    />
+    <style>
+      .service-command,
+      .service-command * {
+        border-radius: 0 !important;
+      }
+
+      #serviceNav > a {
+        border: 1px solid #293236;
+      }
+
+      #serviceNav > a:first-child {
+        border-color: #e5ff5a;
+      }
+    </style>
+  </head>
+  <body class="service-command min-h-screen bg-night font-[Inter] text-[#eef2eb] antialiased">
+    <div class="flex min-h-screen">
+      <aside
+        id="rail"
+        class="fixed bottom-0 left-0 top-[68px] z-40 flex w-[110px] -translate-x-full flex-col border-r border-line bg-[#0d1113] px-3 py-4 transition-all lg:w-[110px] lg:translate-x-0"
+        aria-label="Service navigation"
+      >
+        <div class="mt-4 space-y-1 text-center" id="serviceNav">
+          <a
+            data-tip="Command centre"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl bg-acid text-night lg:px-3"
+            href="#command"
+            ><i class="icon-radio-tower text-lg"></i
+            ><span class="mt-1 hidden text-[11px] font-bold lg:block"
+              >Command centre</span
+            ></a
+          ><a
+            data-tip="Live orders"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#orders"
+            ><i class="icon-receipt-text text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Live orders</span
+            ><b
+              class="absolute right-2 top-2 hidden rounded-full bg-signal px-1.5 py-0.5 font-[DM_Mono] text-[10px] text-white lg:block"
+              >18</b
+            ></a
+          ><a
+            data-tip="Floor"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#floor"
+            ><i class="icon-grid-2x2 text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Floor</span></a
+          ><a
+            data-tip="Kitchen"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#kitchen"
+            ><i class="icon-chef-hat text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Kitchen</span></a
+          ><a
+            data-tip="Team"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#team"
+            ><i class="icon-users text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Team</span></a
+          ><a
+            data-tip="Inventory"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#inventory"
+            ><i class="icon-package-search text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Inventory</span></a
+          ><a
+            data-tip="Performance"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#performance"
+            ><i class="icon-chart-no-axes-combined text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block"
+              >Performance</span
+            ></a
+          ><a
+            data-tip="Guests"
+            class="group relative flex h-16 flex-col items-center justify-center rounded-xl text-white/55 hover:bg-white/5 hover:text-white lg:px-3"
+            href="#guests"
+            ><i class="icon-heart-handshake text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Guests</span></a
+          >
+        </div>
+        <div class="mt-auto">
+          <button
+            id="quickHelp"
+            class="group relative flex h-16 w-full flex-col items-center justify-center rounded-xl text-center text-white/45 hover:bg-white/5 hover:text-white lg:px-3"
+          >
+            <i class="icon-circle-help text-lg"></i
+            ><span class="mt-1 hidden text-[11px] lg:block">Need a hand?</span>
+          </button>
+          <div
+            class="mt-3 hidden rounded-xl border border-acid/20 bg-acid/5 p-2 text-center lg:block"
+          >
+            <p
+              class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-acid"
+            >
+              Team clock
+            </p>
+            <p class="mt-1 text-xs font-semibold">08 / 09 in</p>
+          </div>
+          <button
+            id="railToggle"
+            class="group relative mt-3 hidden h-9 w-full place-items-center rounded-lg border border-line text-white/50 hover:bg-panel hover:text-acid lg:grid"
+            aria-label="Collapse sidebar"
+            aria-describedby="railToggleTooltip"
+          >
+            <i class="icon-panel-left-close"></i
+            ><span
+              id="railToggleTooltip"
+              role="tooltip"
+              class="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-panel px-3 py-2 text-xs font-medium text-white opacity-0 shadow-glow transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100"
+              ><span id="railToggleTooltipText">Collapse rail</span
+              ><span
+                class="absolute right-full top-1/2 -translate-y-1/2 border-y-4 border-r-4 border-y-transparent border-r-panel"
+              ></span
+            ></span>
+          </button>
+        </div>
+      </aside>
+      <div class="min-w-0 flex-1 lg:pl-[110px]" id="workspace">
+        <header
+          class="fixed inset-x-0 top-0 z-50 flex h-[68px] items-center border-b border-line bg-night/95 pb-0 pl-0 pr-4 pt-0 backdrop-blur md:pr-7"
+        >
+          <button
+            id="mobileRail"
+            class="mr-3 grid h-9 w-9 place-items-center rounded-lg bg-panel lg:hidden"
+          >
+            <i class="icon-menu"></i></button
+          ><a
+            class="flex w-[110px] flex-col items-center justify-center gap-1 text-center"
+            href="index.html"
+            ><span
+              class="grid h-9 w-9 place-items-center rounded-xl bg-acid font-[Space_Grotesk] text-lg font-bold text-night"
+              >O</span
+            ><span
+              class="font-[Space_Grotesk] text-[11px] font-bold tracking-tight"
+              >Service OS</span
+            ></a
+          ><button
+            id="branch"
+            class="flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-2 text-left"
+          >
+            <span class="h-2 w-2 rounded-full bg-acid"></span
+            ><span
+              ><small
+                class="block font-[DM_Mono] text-[9px] uppercase text-white/35"
+                >Now operating</small
+              ><strong class="block text-xs">Shoreditch · Dining</strong></span
+            ><i class="icon-chevron-down text-xs text-white/40"></i>
+          </button>
+          <button
+            id="commandSearch"
+            class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3 rounded-lg border border-line bg-panel px-4 py-2 text-left text-xs text-white/45 shadow-sm hover:border-acid/50 hover:text-white sm:flex"
+          >
+            <i class="icon-search text-sm"></i
+            ><span>Search the whole operation</span
+            ><kbd
+              class="rounded border border-white/10 px-1.5 py-0.5 font-[DM_Mono] text-[10px] text-white/40"
+              >⌘ K</kbd
+            >
+          </button>
+          <div class="ml-auto flex items-center gap-2">
+            <button
+              id="searchToggle"
+              class="grid h-9 w-9 place-items-center rounded-lg bg-panel text-white/65 hover:text-white sm:hidden"
+            >
+              <i class="icon-search"></i></button
+            ><button
+              id="alertButton"
+              class="relative grid h-9 w-9 place-items-center rounded-lg bg-panel text-white/65 hover:text-white"
+            >
+              <i class="icon-bell"></i
+              ><span
+                class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-signal"
+              ></span></button
+            ><button
+              id="operator"
+              class="grid h-9 w-9 place-items-center rounded-full border border-acid/30 bg-acid/10 font-[DM_Mono] text-[10px] text-acid"
+            >
+              AK
+            </button>
+          </div>
+          <div
+            id="alertPanel"
+            class="absolute right-4 top-[60px] hidden w-80 rounded-xl border border-line bg-panel p-3 shadow-glow md:right-7"
+          >
+            <div
+              class="flex items-center justify-between border-b border-line pb-3"
+            >
+              <strong class="text-xs">Attention queue</strong
+              ><span class="font-[DM_Mono] text-[10px] text-acid"
+                >03 ACTIVE</span
+              >
+            </div>
+            <button
+              class="flex w-full gap-3 border-b border-line py-3 text-left"
+            >
+              <span
+                class="grid h-8 w-8 place-items-center rounded-lg bg-signal/15 text-signal"
+                ><i class="icon-clock-3"></i></span
+              ><span
+                ><strong class="block text-xs">Table 08 is waiting</strong
+                ><small class="block pt-1 text-[11px] text-white/45"
+                  >Mains delayed by 9 minutes</small
+                ></span
+              ></button
+            ><button class="flex w-full gap-3 pt-3 text-left">
+              <span
+                class="grid h-8 w-8 place-items-center rounded-lg bg-acid/10 text-acid"
+                ><i class="icon-user-plus"></i></span
+              ><span
+                ><strong class="block text-xs">Walk-in at host stand</strong
+                ><small class="block pt-1 text-[11px] text-white/45"
+                  >Party of two · 12:42</small
+                ></span
+              >
+            </button>
+          </div>
+        </header>
+        <main
+          class="hidden mx-auto max-w-[1680px] p-4 pt-[92px] md:p-7 md:pt-[92px]"
+          id="command"
+        >
+          <section
+            class="flex flex-col justify-between gap-4 border-b border-line pb-6 md:flex-row md:items-end"
+          >
+            <div>
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-[.14em] text-acid"
+              >
+                Friday / 12:38 / Lunch service
+              </p>
+              <h1
+                class="mt-2 font-[Space_Grotesk] text-3xl font-bold tracking-[-.05em] md:text-4xl"
+              >
+                Run every moving part.
+              </h1>
+            </div>
+            <div class="flex gap-2">
+              <button
+                id="notes"
+                class="rounded-lg border border-line bg-panel px-3 py-2 text-xs font-semibold text-white/75"
+              >
+                <i class="icon-notebook-pen mr-1"></i>Shift notes</button
+              ><button
+                class="rounded-lg bg-acid px-3 py-2 text-xs font-bold text-night"
+              >
+                <i class="icon-plus mr-1"></i>Walk-in
+              </button>
+            </div>
+          </section>
+          <section
+            class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5"
+            id="performance"
+          >
+            <article class="rounded-xl border border-line bg-panel p-4">
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+              >
+                Net sales
+              </p>
+              <strong class="mt-2 block font-[Space_Grotesk] text-2xl font-bold"
+                >£4,820</strong
+              ><small class="mt-2 block text-[11px] text-acid"
+                >+8.4% to forecast</small
+              >
+            </article>
+            <article class="rounded-xl border border-line bg-panel p-4">
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+              >
+                Active orders
+              </p>
+              <strong class="mt-2 block font-[Space_Grotesk] text-2xl font-bold"
+                >18
+                <em class="font-[Inter] text-xs not-italic text-white/40"
+                  >live</em
+                ></strong
+              ><small class="mt-2 block text-[11px] text-white/50"
+                >04 at kitchen pass</small
+              >
+            </article>
+            <article
+              class="rounded-xl border border-signal/40 bg-signal/5 p-4"
+              id="inventory"
+            >
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-signal"
+              >
+                Inventory watch
+              </p>
+              <strong class="mt-2 block font-[Space_Grotesk] text-2xl font-bold"
+                >03
+                <em class="font-[Inter] text-xs not-italic text-white/55"
+                  >items</em
+                ></strong
+              ><small class="mt-2 block text-[11px] text-signal"
+                >Low before dinner</small
+              >
+            </article>
+            <article
+              class="rounded-xl border border-line bg-panel p-4"
+              id="team"
+            >
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+              >
+                Team coverage
+              </p>
+              <strong class="mt-2 block font-[Space_Grotesk] text-2xl font-bold"
+                >08 / 09</strong
+              ><small class="mt-2 block text-[11px] text-acid"
+                >Floor fully covered</small
+              >
+            </article>
+            <article
+              class="rounded-xl border border-sky/40 bg-sky/5 p-4"
+              id="guests"
+            >
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-sky"
+              >
+                Guest signal
+              </p>
+              <strong class="mt-2 block font-[Space_Grotesk] text-2xl font-bold"
+                >4.8
+                <em class="font-[Inter] text-xs not-italic text-white/55"
+                  >/ 5</em
+                ></strong
+              ><small class="mt-2 block text-[11px] text-sky"
+                >12 new reviews today</small
+              >
+            </article>
+          </section>
+          <section class="mt-5 grid gap-4 xl:grid-cols-[1.1fr_.9fr_320px]">
+            <article
+              class="rounded-2xl border border-line bg-panel p-4 shadow-glow"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p
+                    class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+                  >
+                    Room state
+                  </p>
+                  <h2 class="mt-1 font-[Space_Grotesk] text-xl font-bold">
+                    Floor, live
+                  </h2>
+                </div>
+                <div class="flex gap-2 text-[10px]">
+                  <span class="rounded-full bg-acid/10 px-2 py-1 text-acid"
+                    >32 seated · Zone A</span
+                  ><span class="rounded-full bg-white/5 px-2 py-1 text-white/55"
+                    >08 open</span
+                  >
+                </div>
+              </div>
+              <div
+                class="mt-5 grid grid-cols-5 gap-3 sm:grid-cols-7"
+                id="floor"
+              >
+                <button
+                  class="aspect-square rounded-xl border border-acid bg-acid/10 font-[DM_Mono] text-xs text-acid"
+                >
+                  01<small class="mt-1 block text-[9px]">2 / 2</small></button
+                ><button
+                  class="aspect-square rounded-xl border border-signal bg-signal/10 font-[DM_Mono] text-xs text-signal"
+                >
+                  02<small class="mt-1 block text-[9px]">WAIT</small></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  03<small class="mt-1 block text-[9px] text-white/35"
+                    >4 / 4</small
+                  ></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  04<small class="mt-1 block text-[9px] text-white/35"
+                    >6 / 6</small
+                  ></button
+                ><button
+                  class="aspect-square rounded-xl border border-dashed border-white/20 font-[DM_Mono] text-xs text-white/35"
+                >
+                  05<small class="mt-1 block text-[9px]">OPEN</small></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  06<small class="mt-1 block text-[9px] text-white/35"
+                    >2 / 2</small
+                  ></button
+                ><button
+                  class="aspect-square rounded-xl border border-sky bg-sky/10 font-[DM_Mono] text-xs text-sky"
+                >
+                  07<small class="mt-1 block text-[9px]">DESSERT</small></button
+                ><button
+                  class="aspect-square rounded-xl border border-signal bg-signal/10 font-[DM_Mono] text-xs text-signal"
+                >
+                  08<small class="mt-1 block text-[9px]">LATE</small></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  09<small class="mt-1 block text-[9px] text-white/35"
+                    >4 / 4</small
+                  ></button
+                ><button
+                  class="aspect-square rounded-xl border border-dashed border-white/20 font-[DM_Mono] text-xs text-white/35"
+                >
+                  10<small class="mt-1 block text-[9px]">OPEN</small></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  11<small class="mt-1 block text-[9px] text-white/35"
+                    >2 / 2</small
+                  ></button
+                ><button
+                  class="aspect-square rounded-xl bg-[#273035] font-[DM_Mono] text-xs"
+                >
+                  12<small class="mt-1 block text-[9px] text-white/35"
+                    >2 / 2</small
+                  >
+                </button>
+              </div>
+              <div
+                class="mt-5 flex items-center gap-5 border-t border-line pt-4 font-[DM_Mono] text-[10px] text-white/45"
+              >
+                <span
+                  ><i class="mr-1 inline-block h-2 w-2 rounded-full bg-acid"></i
+                  >On pace</span
+                ><span
+                  ><i
+                    class="mr-1 inline-block h-2 w-2 rounded-full bg-signal"
+                  ></i
+                  >Needs attention</span
+                ><span
+                  ><i class="mr-1 inline-block h-2 w-2 rounded-full bg-sky"></i
+                  >Finishing</span
+                >
+              </div>
+            </article>
+            <article
+              class="rounded-2xl border border-line bg-panel shadow-glow"
+              id="orders"
+            >
+              <div class="flex items-center justify-between p-4">
+                <div>
+                  <p
+                    class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+                  >
+                    Order rail
+                  </p>
+                  <h2 class="mt-1 font-[Space_Grotesk] text-xl font-bold">
+                    Next decisions
+                  </h2>
+                </div>
+                <button class="text-xs font-bold text-acid">
+                  All 18 <i class="icon-arrow-right"></i>
+                </button>
+              </div>
+              <div class="divide-y divide-line">
+                <div class="flex items-center gap-3 px-4 py-3">
+                  <span class="w-10 font-[DM_Mono] text-xs text-signal"
+                    >12:10</span
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-lg bg-signal/15 text-signal"
+                    ><i class="icon-flame"></i></span
+                  ><span class="min-w-0 flex-1"
+                    ><strong class="block text-xs">Table 08 · mains</strong
+                    ><small class="block text-[11px] text-white/45"
+                      >28 min in kitchen · waiter notified</small
+                    ></span
+                  ><button
+                    class="rounded-md border border-signal/40 px-2 py-1 text-[10px] font-bold text-signal"
+                  >
+                    Resolve
+                  </button>
+                </div>
+                <div class="flex items-center gap-3 px-4 py-3">
+                  <span class="w-10 font-[DM_Mono] text-xs text-acid"
+                    >12:45</span
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-lg bg-acid/10 text-acid"
+                    ><i class="icon-door-open"></i></span
+                  ><span class="min-w-0 flex-1"
+                    ><strong class="block text-xs">Norton party arriving</strong
+                    ><small class="block text-[11px] text-white/45"
+                      >6 covers · Table 10 held</small
+                    ></span
+                  ><button
+                    class="rounded-md bg-acid px-2 py-1 text-[10px] font-bold text-night"
+                  >
+                    Seat
+                  </button>
+                </div>
+                <div class="flex items-center gap-3 px-4 py-3">
+                  <span class="w-10 font-[DM_Mono] text-xs text-sky">12:50</span
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-lg bg-sky/10 text-sky"
+                    ><i class="icon-wine"></i></span
+                  ><span class="min-w-0 flex-1"
+                    ><strong class="block text-xs">Table 07 · dessert</strong
+                    ><small class="block text-[11px] text-white/45"
+                      >Offer coffee before bill drop</small
+                    ></span
+                  ><button
+                    class="rounded-md border border-sky/40 px-2 py-1 text-[10px] font-bold text-sky"
+                  >
+                    Open
+                  </button>
+                </div>
+              </div>
+            </article>
+            <aside class="space-y-4">
+              <article class="rounded-2xl bg-acid p-4 text-night">
+                <p
+                  class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-night/55"
+                >
+                  Service tempo
+                </p>
+                <strong
+                  class="mt-3 block font-[Space_Grotesk] text-5xl font-bold tracking-[-.06em]"
+                  >74<small class="text-lg">%</small></strong
+                >
+                <p class="mt-1 text-xs font-medium">
+                  Capacity used · +6% vs target
+                </p>
+                <div class="mt-5 flex h-9 items-end gap-1">
+                  <i class="h-[35%] flex-1 bg-night/20"></i
+                  ><i class="h-[52%] flex-1 bg-night/25"></i
+                  ><i class="h-[44%] flex-1 bg-night/30"></i
+                  ><i class="h-[83%] flex-1 bg-night/40"></i
+                  ><i class="h-full flex-1 bg-night"></i
+                  ><i class="h-[70%] flex-1 bg-night/50"></i>
+                </div>
+              </article>
+              <article
+                class="rounded-2xl border border-line bg-panel p-4"
+                id="kitchen"
+              >
+                <p
+                  class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+                >
+                  Kitchen pulse
+                </p>
+                <div class="mt-4 space-y-4">
+                  <div class="flex justify-between text-xs">
+                    <span class="text-white/60">Grill</span
+                    ><b class="text-acid">09 min</b>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-white/60">Pass</span
+                    ><b class="text-white">04 tickets</b>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-white/60">Dessert</span
+                    ><b class="text-sky">06 min</b>
+                  </div>
+                </div>
+                <button
+                  class="mt-5 w-full rounded-lg border border-line py-2 text-xs font-semibold text-white/70"
+                >
+                  Open kitchen screen
+                </button>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+    <aside
+      id="notesPanel"
+      class="fixed inset-y-0 right-0 z-50 w-full max-w-sm translate-x-full border-l border-line bg-panel p-6 shadow-2xl transition-transform"
+    >
+      <div class="flex items-start justify-between">
+        <div>
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-acid"
+          >
+            Shift notes
+          </p>
+          <h2 class="mt-1 font-[Space_Grotesk] text-2xl font-bold">
+            Handover board
+          </h2>
+        </div>
+        <button
+          id="closeNotes"
+          class="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/5"
+        >
+          <i class="icon-x"></i>
+        </button>
+      </div>
+      <div class="mt-7 space-y-4">
+        <article class="rounded-xl bg-white/5 p-4">
+          <span class="font-[DM_Mono] text-[10px] text-acid">01</span
+          ><strong class="mt-2 block text-sm">Allergy protocol</strong>
+          <p class="mt-1 text-xs leading-relaxed text-white/55">
+            Table 14 has a shellfish allergy. Keep pass briefed before mains.
+          </p>
+        </article>
+        <article class="rounded-xl bg-white/5 p-4">
+          <span class="font-[DM_Mono] text-[10px] text-acid">02</span
+          ><strong class="mt-2 block text-sm">Private dining reset</strong>
+          <p class="mt-1 text-xs leading-relaxed text-white/55">
+            Orchard Room must be reset for 18:30 wine dinner.
+          </p>
+        </article>
+      </div>
+      <textarea
+        class="mt-6 h-28 w-full rounded-xl border border-line bg-night p-3 text-xs outline-none focus:border-acid"
+        placeholder="Leave a note for the next team..."
+      ></textarea
+      ><button
+        class="mt-3 w-full rounded-lg bg-acid py-3 text-xs font-bold text-night"
+      >
+        Save handover
+      </button>
+    </aside>
+    <div id="scrim" class="fixed inset-0 z-40 hidden bg-black/60"></div>
+    <section
+      id="commandPalette"
+      class="fixed inset-0 z-[60] hidden overflow-y-auto bg-night/95 p-4 backdrop-blur-sm md:p-10"
+      aria-label="Global command search"
+    >
+      <div class="mx-auto mt-4 max-w-3xl md:mt-12">
+        <div class="rounded-2xl border border-line bg-panel p-4 shadow-glow">
+          <div class="flex items-center gap-3 border-b border-line pb-4">
+            <i class="icon-search text-lg text-acid"></i
+            ><input
+              id="commandInput"
+              class="min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-white/35"
+              placeholder="Search orders, tables, guests, inventory, team..."
+            /><button
+              id="closeCommand"
+              class="rounded-lg border border-line px-2 py-1 font-[DM_Mono] text-[10px] text-white/50"
+            >
+              ESC
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2 py-4">
+            <button
+              class="command-filter rounded-full bg-acid px-3 py-1.5 text-[11px] font-bold text-night"
+            >
+              All</button
+            ><button
+              class="command-filter rounded-full border border-line px-3 py-1.5 text-[11px] text-white/65"
+            >
+              Orders</button
+            ><button
+              class="command-filter rounded-full border border-line px-3 py-1.5 text-[11px] text-white/65"
+            >
+              Tables</button
+            ><button
+              class="command-filter rounded-full border border-line px-3 py-1.5 text-[11px] text-white/65"
+            >
+              Guests</button
+            ><button
+              class="command-filter rounded-full border border-line px-3 py-1.5 text-[11px] text-white/65"
+            >
+              Inventory
+            </button>
+          </div>
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40"
+          >
+            Suggested matches
+          </p>
+          <div class="mt-3 divide-y divide-line" id="commandResults">
+            <a
+              class="command-result flex items-center gap-4 py-4 hover:text-acid"
+              data-category="Orders"
+              href="#orders"
+              ><span
+                class="grid h-10 w-10 place-items-center rounded-xl bg-signal/10 text-signal"
+                ><i class="icon-receipt-text"></i></span
+              ><span class="flex-1"
+                ><strong class="block text-sm"
+                  >Order #1048 · James Morrison</strong
+                ><small class="text-xs text-white/45"
+                  >Table 14 · £84.00 · Mains in progress</small
+                ></span
+              ><span class="font-[DM_Mono] text-[10px] text-white/35"
+                >ORDER</span
+              ></a
+            >
+            <a
+              class="command-result flex items-center gap-4 py-4 hover:text-acid"
+              data-category="Tables"
+              href="#floor"
+              ><span
+                class="grid h-10 w-10 place-items-center rounded-xl bg-signal/10 text-signal"
+                ><i class="icon-grid-2x2"></i></span
+              ><span class="flex-1"
+                ><strong class="block text-sm"
+                  >Table 08 · Needs attention</strong
+                ><small class="text-xs text-white/45"
+                  >Mains delayed by 9 minutes</small
+                ></span
+              ><span class="font-[DM_Mono] text-[10px] text-white/35"
+                >TABLE</span
+              ></a
+            >
+            <a
+              class="command-result flex items-center gap-4 py-4 hover:text-acid"
+              data-category="Inventory"
+              href="#inventory"
+              ><span
+                class="grid h-10 w-10 place-items-center rounded-xl bg-acid/10 text-acid"
+                ><i class="icon-package-search"></i></span
+              ><span class="flex-1"
+                ><strong class="block text-sm">Sea bass · low stock</strong
+                ><small class="text-xs text-white/45"
+                  >8 portions remaining · dinner threshold 14</small
+                ></span
+              ><span class="font-[DM_Mono] text-[10px] text-white/35"
+                >INVENTORY</span
+              ></a
+            >
+            <a
+              class="command-result flex items-center gap-4 py-4 hover:text-acid"
+              data-category="Guests"
+              href="#guests"
+              ><span
+                class="grid h-10 w-10 place-items-center rounded-xl bg-sky/10 text-sky"
+                ><i class="icon-user-round"></i></span
+              ><span class="flex-1"
+                ><strong class="block text-sm">Daniel Norton · VIP guest</strong
+                ><small class="text-xs text-white/45"
+                  >Arriving 12:45 · Party of 6</small
+                ></span
+              ><span class="font-[DM_Mono] text-[10px] text-white/35"
+                >GUEST</span
+              ></a
+            >
+          </div>
+          <p
+            id="emptyCommand"
+            class="hidden py-8 text-center text-sm text-white/45"
+          >
+            No matching operational data.
+          </p>
+        </div>
+        <p
+          class="mt-4 text-center font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/30"
+        >
+          Search is a command, not a destination
+        </p>
+      </div>
+    </section>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        show = (el, on) => el.classList.toggle("hidden", !on);
+      $("#alertButton").onclick = () =>
+        show($("#alertPanel"), $("#alertPanel").classList.contains("hidden"));
+      $("#notes").onclick = () => {
+        $("#notesPanel").classList.remove("translate-x-full");
+        show($("#scrim"), true);
+      };
+      $("#closeNotes").onclick = $("#scrim").onclick = () => {
+        $("#notesPanel").classList.add("translate-x-full");
+        show($("#scrim"), false);
+      };
+      let commandCategory = "All";
+      const filterCommand = () => {
+        const query = $("#commandInput").value.toLowerCase();
+        const matches = [
+          ...document.querySelectorAll(".command-result"),
+        ].filter((result) => {
+          const visible =
+            (commandCategory === "All" ||
+              result.dataset.category === commandCategory) &&
+            result.textContent.toLowerCase().includes(query);
+          result.classList.toggle("hidden", !visible);
+          return visible;
+        });
+        show($("#emptyCommand"), matches.length === 0);
+      };
+      const openCommand = () => {
+        show($("#commandPalette"), true);
+        $("#commandInput").focus();
+      };
+      const closeCommand = () => show($("#commandPalette"), false);
+      $("#commandSearch").onclick = openCommand;
+      $("#searchToggle").onclick = openCommand;
+      $("#closeCommand").onclick = closeCommand;
+      $("#commandInput").oninput = (event) => {
+        filterCommand();
+      };
+      document.querySelectorAll(".command-filter").forEach(
+        (filter) =>
+          (filter.onclick = () => {
+            commandCategory = filter.textContent.trim();
+            document
+              .querySelectorAll(".command-filter")
+              .forEach(
+                (item) =>
+                  (item.className =
+                    "command-filter rounded-full border border-line px-3 py-1.5 text-[11px] text-white/65"),
+              );
+            filter.className =
+              "command-filter rounded-full bg-acid px-3 py-1.5 text-[11px] font-bold text-night";
+            filterCommand();
+          }),
+      );
+      document
+        .querySelectorAll(".command-result")
+        .forEach((result) => result.addEventListener("click", closeCommand));
+      document.onkeydown = (event) => {
+        if (
+          (event.metaKey || event.ctrlKey) &&
+          event.key.toLowerCase() === "k"
+        ) {
+          event.preventDefault();
+          openCommand();
+        }
+        if (event.key === "Escape") closeCommand();
+      };
+      $("#mobileRail").onclick = () =>
+        $("#rail").classList.toggle("-translate-x-full");
+      $("#railToggle").onclick = () => {
+        const r = $("#rail"),
+          wide = r.classList.contains("lg:w-[110px]");
+        r.classList.toggle("lg:w-[110px]", !wide);
+        r.classList.toggle("lg:w-[76px]", wide);
+        $("#workspace").classList.toggle("lg:pl-[110px]", !wide);
+        $("#workspace").classList.toggle("lg:pl-[76px]", wide);
+        r.querySelectorAll(".lg\\:block").forEach((x) =>
+          x.classList.toggle("lg:hidden", wide),
+        );
+        $("#railToggle").setAttribute(
+          "aria-label",
+          wide ? "Expand rail" : "Collapse rail",
+        );
+        $("#railToggleTooltipText").textContent = wide
+          ? "Expand rail"
+          : "Collapse rail";
+        $("#railToggle i").className = wide
+          ? "icon-panel-left-open"
+          : "icon-panel-left-close";
+      };
+      document.onclick = (e) => {
+        if (!e.target.closest("#alertButton,#alertPanel"))
+          show($("#alertPanel"), false);
+      };
+    </script>
+  </body>
+</html>

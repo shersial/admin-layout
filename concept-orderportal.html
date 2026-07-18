@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="OrderPortal restaurant operations dashboard"
+    />
+    <title>OrderPortal | Operations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#0f0f0f",
+              plum: "#4a0929",
+              canvas: "#ffffff",
+              paper: "#ffffff",
+              accent: "#b81969",
+              soft: "#f6c0db",
+              lime: "#f9f804",
+              moss: "#901452",
+            },
+            boxShadow: { card: "0 12px 35px rgba(16,16,16,.07)" },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/lucide-static@0.468.0/font/lucide.css"
+    />
+  </head>
+  <body class="bg-canvas font-[Inter] text-ink antialiased">
+    <div class="flex min-h-screen" id="appShell">
+      <aside
+        class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-black/10 bg-plum px-3 py-4 text-white transition-transform lg:static lg:translate-x-0"
+        id="sidebar"
+        aria-label="Primary navigation"
+      >
+        <div class="sidebar-brand mb-8 flex h-10 items-center gap-2 px-2">
+          <button
+            class="grid h-8 w-8 place-items-center rounded-full bg-accent text-lg font-black"
+            id="sidebarLogo"
+            aria-label="OrderPortal home"
+            type="button"
+          >
+            O</button
+          ><strong class="sidebar-brand-name text-lg tracking-tight"
+            >OrderPortal</strong
+          ><button
+            class="ml-auto grid h-8 w-8 place-items-center rounded-lg text-white/60 hover:bg-white/10"
+            id="sidebarToggle"
+            aria-label="Collapse sidebar"
+          >
+            <i class="icon-panel-left-close"></i>
+          </button>
+        </div>
+        <nav class="space-y-1">
+          <a
+            class="sidebar-item flex h-11 items-center gap-3 rounded-xl bg-white px-3 text-sm font-bold text-ink"
+            data-tooltip="Overview"
+            href="#overview"
+            ><i class="icon-layout-dashboard text-lg"></i
+            ><span>Overview</span></a
+          >
+          <a
+            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Orders"
+            href="#orders"
+            ><i class="icon-receipt-text text-lg"></i><span>Orders</span
+            ><b
+              class="ml-auto rounded-full bg-accent px-2 py-0.5 font-[DM_Mono] text-[10px] text-white"
+              >12</b
+            ></a
+          >
+          <button
+            class="sidebar-item flex h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Menu"
+            id="menuGroup"
+            aria-expanded="true"
+          >
+            <i class="icon-utensils text-lg"></i><span>Menu</span
+            ><i class="sidebar-chevron icon-chevron-up ml-auto"></i>
+          </button>
+          <div
+            class="ml-10 space-y-1 pb-2 text-xs text-white/50"
+            id="menuSubnav"
+          >
+            <a class="block py-1 text-lime" href="#items">Items</a
+            ><a class="block py-1 hover:text-white" href="#availability"
+              >Availability</a
+            ><a class="block py-1 hover:text-white" href="#modifiers"
+              >Modifiers</a
+            >
+          </div>
+          <a
+            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Team"
+            href="#team"
+            ><i class="icon-users-round text-lg"></i><span>Team</span></a
+          >
+          <a
+            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Reports"
+            href="#reports"
+            ><i class="icon-chart-no-axes-combined text-lg"></i
+            ><span>Reports</span></a
+          >
+        </nav>
+        <div class="mt-auto space-y-1 border-t border-white/10 pt-4">
+          <a
+            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Help centre"
+            href="#support"
+            ><i class="icon-circle-help text-lg"></i><span>Help centre</span></a
+          ><a
+            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Settings"
+            href="#settings"
+            ><i class="icon-settings-2 text-lg"></i><span>Settings</span></a
+          >
+          <a
+            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-[#f6c0db] hover:bg-white/10 hover:text-white"
+            data-tooltip="Log out"
+            href="#logout"
+            ><i class="icon-log-out text-lg"></i><span>Log out</span></a
+          >
+          <div class="sidebar-service-status mt-4 rounded-xl bg-white/10 p-3">
+            <p
+              class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-lime"
+            >
+              Live service
+            </p>
+            <p class="mt-1 text-xs font-semibold">Friday 18:00 - 23:30</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="min-w-0 flex-1">
+        <header
+          class="sticky top-0 z-30 flex h-[72px] items-center border-b border-black/10 bg-paper px-4 md:px-8"
+        >
+          <button
+            class="mr-2 grid h-9 w-9 place-items-center rounded-lg hover:bg-black/5 lg:hidden"
+            id="mobileMenu"
+            aria-label="Open navigation"
+          >
+            <i class="icon-menu text-lg"></i>
+          </button>
+          <button
+            class="flex items-center gap-3 text-left"
+            id="branchPicker"
+            aria-expanded="false"
+          >
+            <span
+              class="h-2.5 w-2.5 rounded-full bg-[#5eac72] ring-4 ring-[#e3f4e5]"
+            ></span
+            ><span
+              ><span
+                class="block text-[10px] font-medium uppercase tracking-wider text-black/45"
+                >Current location</span
+              ><strong class="block text-sm">Vela, Shoreditch</strong></span
+            ><i class="icon-chevron-down text-sm text-black/45"></i>
+          </button>
+          <div class="ml-auto flex items-center gap-1.5">
+            <div class="flex items-center">
+              <div
+                class="max-w-0 overflow-hidden opacity-0 transition-all duration-200"
+                id="searchInline"
+              >
+                <label
+                  class="flex h-9 w-52 items-center gap-2 rounded-l-lg border border-r-0 border-black/10 bg-paper pl-3 text-black/45"
+                  ><i class="icon-search text-sm"></i
+                  ><input
+                    class="w-full bg-transparent pr-2 text-sm outline-none placeholder:text-black/35"
+                    id="searchInput"
+                    type="search"
+                    autocomplete="off"
+                    placeholder="Search..."
+                /></label>
+              </div>
+              <button
+                class="grid h-9 w-9 place-items-center rounded-lg text-black/60 hover:bg-black/5"
+                id="searchButton"
+                aria-label="Search"
+                aria-expanded="false"
+              >
+                <i class="icon-search"></i>
+              </button>
+            </div>
+            <button
+              class="relative grid h-9 w-9 place-items-center rounded-lg text-black/60 hover:bg-black/5"
+              id="notificationButton"
+              aria-label="Notifications"
+              aria-expanded="false"
+            >
+              <i class="icon-bell"></i
+              ><span
+                class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent"
+              ></span></button
+            ><button
+              class="ml-2 flex items-center border-l border-black/10 pl-3"
+              id="profileButton"
+              aria-expanded="false"
+            >
+              <span
+                class="grid h-8 w-8 place-items-center rounded-full bg-plum font-[DM_Mono] text-[10px] text-lime"
+                >AK</span
+              >
+            </button>
+          </div>
+          <div
+            class="absolute right-4 top-16 hidden w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-black/10 bg-paper p-3 shadow-card md:right-8"
+            id="searchPopover"
+          >
+            <p
+              class="px-1 pb-2 pt-1 font-[DM_Mono] text-[10px] uppercase tracking-wider text-black/40"
+            >
+              Quick results
+            </p>
+            <div class="space-y-1" id="searchResults">
+              <a
+                class="search-result flex items-center gap-3 rounded-xl p-2 hover:bg-black/5"
+                href="#orders"
+                ><span
+                  class="grid h-8 w-8 place-items-center rounded-lg bg-soft text-accent"
+                  ><i class="icon-receipt-text"></i></span
+                ><span
+                  ><strong class="block text-xs">Order #1048</strong
+                  ><small class="text-[11px] text-black/50"
+                    >James Morrison · £84.00</small
+                  ></span
+                ></a
+              >
+              <a
+                class="search-result flex items-center gap-3 rounded-xl p-2 hover:bg-black/5"
+                href="#items"
+                ><span
+                  class="grid h-8 w-8 place-items-center rounded-lg bg-[#fff8b5] text-ink"
+                  ><i class="icon-utensils"></i></span
+                ><span
+                  ><strong class="block text-xs">Sea bass</strong
+                  ><small class="text-[11px] text-black/50"
+                    >Menu item · low stock</small
+                  ></span
+                ></a
+              >
+              <a
+                class="search-result flex items-center gap-3 rounded-xl p-2 hover:bg-black/5"
+                href="#team"
+                ><span
+                  class="grid h-8 w-8 place-items-center rounded-lg bg-black/5 text-ink"
+                  ><i class="icon-user-round"></i></span
+                ><span
+                  ><strong class="block text-xs">Amara Kim</strong
+                  ><small class="text-[11px] text-black/50"
+                    >Team member · Shoreditch</small
+                  ></span
+                ></a
+              >
+            </div>
+            <p
+              class="hidden px-1 py-3 text-xs text-black/50"
+              id="noSearchResults"
+            >
+              No matching orders, menu items, or guests.
+            </p>
+          </div>
+          <div
+            class="absolute left-4 top-16 hidden w-80 rounded-2xl border border-black/10 bg-paper p-3 shadow-card md:left-8"
+            id="branchPopover"
+          >
+            <div class="mb-3 flex items-center justify-between px-1">
+              <strong class="text-sm">Switch location</strong
+              ><button class="text-xs font-semibold text-accent">Manage</button>
+            </div>
+            <label
+              class="mb-3 flex h-10 items-center gap-2 rounded-lg bg-black/5 px-3 text-black/40"
+              ><i class="icon-search"></i
+              ><input
+                class="w-full bg-transparent text-sm outline-none placeholder:text-black/35"
+                placeholder="Search locations"
+            /></label>
+            <p
+              class="px-1 font-[DM_Mono] text-[10px] uppercase tracking-wider text-black/40"
+            >
+              Recently viewed
+            </p>
+            <button
+              class="mt-2 flex w-full items-center gap-3 rounded-xl bg-soft p-2 text-left"
+            >
+              <span class="h-2 w-2 rounded-full bg-[#5eac72]"></span
+              ><span class="flex-1"
+                ><strong class="block text-xs">Vela, Shoreditch</strong
+                ><small class="text-[11px] text-black/50"
+                  >Open until 23:30</small
+                ></span
+              ><i class="icon-check text-accent"></i></button
+            ><button
+              class="mt-1 flex w-full items-center gap-3 rounded-xl p-2 text-left hover:bg-black/5"
+            >
+              <span class="h-2 w-2 rounded-full bg-black/25"></span
+              ><span
+                ><strong class="block text-xs">Vela, Notting Hill</strong
+                ><small class="text-[11px] text-black/50"
+                  >Opening at 12:00</small
+                ></span
+              >
+            </button>
+          </div>
+          <div
+            class="absolute right-4 top-16 hidden w-60 rounded-2xl border border-black/10 bg-paper p-2 shadow-card md:right-8"
+            id="profilePopover"
+          >
+            <div class="flex gap-3 border-b border-black/10 p-2 pb-3">
+              <span
+                class="grid h-9 w-9 place-items-center rounded-full bg-plum font-[DM_Mono] text-[10px] text-lime"
+                >AK</span
+              ><span
+                ><strong class="block text-xs">Amara Kim</strong
+                ><small class="text-[10px] text-black/50"
+                  >amara@velaportal.co</small
+                ></span
+              >
+            </div>
+            <a
+              class="mt-1 flex rounded-lg px-2 py-2 text-xs hover:bg-black/5"
+              href="#profile"
+              >Profile settings</a
+            ><a
+              class="flex rounded-lg px-2 py-2 text-xs hover:bg-black/5"
+              href="#account"
+              >Account settings</a
+            ><a
+              class="flex rounded-lg px-2 py-2 text-xs hover:bg-black/5"
+              href="#help"
+              >Help &amp; support</a
+            ><a
+              class="flex rounded-lg px-2 py-2 text-xs text-accent hover:bg-black/5"
+              href="#logout"
+              >Log out</a
+            >
+          </div>
+          <div
+            class="absolute right-14 top-16 hidden w-80 rounded-2xl border border-black/10 bg-paper p-3 shadow-card md:right-24"
+            id="notificationPopover"
+            role="status"
+          >
+            <div
+              class="flex items-center justify-between border-b border-black/10 px-1 pb-3"
+            >
+              <strong class="text-sm">Notifications</strong>
+              <button class="text-xs font-semibold text-accent">
+                Mark all read
+              </button>
+            </div>
+            <a
+              class="mt-1 flex gap-3 rounded-xl p-2 hover:bg-black/5"
+              href="#orders"
+            >
+              <span
+                class="mt-0.5 grid h-8 w-8 place-items-center rounded-lg bg-soft text-accent"
+                ><i class="icon-receipt-text"></i
+              ></span>
+              <span
+                ><strong class="block text-xs">12 new orders need review</strong
+                ><small class="mt-1 block text-[11px] text-black/50"
+                  >Updated 4 minutes ago</small
+                ></span
+              >
+            </a>
+            <a class="flex gap-3 rounded-xl p-2 hover:bg-black/5" href="#items">
+              <span
+                class="mt-0.5 grid h-8 w-8 place-items-center rounded-lg bg-[#fff8b5] text-ink"
+                ><i class="icon-package-alert"></i
+              ></span>
+              <span
+                ><strong class="block text-xs"
+                  >3 menu items are low in stock</strong
+                ><small class="mt-1 block text-[11px] text-black/50"
+                  >Updated 19 minutes ago</small
+                ></span
+              >
+            </a>
+            <button
+              class="mt-2 w-full border-t border-black/10 pt-3 text-xs font-bold text-accent"
+            >
+              View all activity <i class="icon-arrow-right"></i>
+            </button>
+          </div>
+        </header>
+
+        <main class="hidden mx-auto max-w-[1600px] px-4 py-7 md:px-8">
+          <div class="flex items-center gap-1 text-xs text-black/45">
+            <span>Overview</span><i class="icon-chevron-right text-xs"></i
+            ><span>Today</span>
+          </div>
+          <section
+            class="mt-5 flex flex-col justify-between gap-5 md:flex-row md:items-end"
+          >
+            <div>
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent"
+              >
+                Friday, 17 July
+              </p>
+              <h1
+                class="mt-2 text-3xl font-extrabold tracking-[-.06em] md:text-5xl"
+              >
+                You’re in control.
+              </h1>
+              <p class="mt-3 text-sm text-black/55">
+                Real-time performance across Vela, Shoreditch.
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button
+                class="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-black/15 bg-paper px-4 text-sm font-semibold hover:bg-black/5"
+                id="panelTrigger"
+              >
+                <i class="icon-list-filter"></i>Service notes</button
+              ><button
+                class="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-white hover:bg-[#9e0e57]"
+                id="newBooking"
+              >
+                <i class="icon-plus"></i>New booking
+              </button>
+            </div>
+          </section>
+          <section
+            class="mt-7 flex items-center gap-3 rounded-2xl bg-plum p-4 text-white"
+          >
+            <span
+              class="grid h-10 w-10 place-items-center rounded-xl bg-lime text-lg text-ink"
+              ><i class="icon-door-open"></i
+            ></span>
+            <div class="min-w-0">
+              <p
+                class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-lime"
+              >
+                Live service
+              </p>
+              <strong class="text-sm">Dining room is open</strong
+              ><span class="ml-2 hidden text-xs text-white/55 sm:inline"
+                >Lunch ends at 15:30. Dinner begins at 18:00.</span
+              >
+            </div>
+            <button
+              class="ml-auto hidden text-xs font-semibold text-lime sm:block"
+            >
+              View floor plan <i class="icon-arrow-up-right"></i>
+            </button>
+          </section>
+          <section class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <article class="rounded-2xl bg-accent p-5 text-white">
+              <span class="text-xs text-white/70">Today’s covers</span
+              ><strong class="mt-3 block text-4xl font-extrabold tracking-tight"
+                >146
+                <em class="text-lg not-italic text-white/65">/ 180</em></strong
+              >
+              <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-white/25">
+                <span class="block h-full w-[81%] rounded-full bg-lime"></span>
+              </div>
+              <small class="mt-3 block text-[11px] text-white/75"
+                ><b class="text-lime">+12%</b> compared with last Friday</small
+              >
+            </article>
+            <article
+              class="rounded-2xl border border-black/10 bg-paper p-5 shadow-card"
+            >
+              <span class="text-xs text-black/50">Expected spend</span
+              ><strong class="mt-3 block text-3xl font-extrabold tracking-tight"
+                >£4,820</strong
+              ><small class="mt-6 block text-[11px] text-black/50"
+                ><b class="text-[#48845a]">+8.4%</b> vs. forecast</small
+              >
+            </article>
+            <article
+              class="rounded-2xl border border-black/10 bg-paper p-5 shadow-card"
+            >
+              <span class="text-xs text-black/50">Table turn time</span
+              ><strong class="mt-3 block text-3xl font-extrabold tracking-tight"
+                >1h 42m</strong
+              ><small class="mt-6 block text-[11px] text-black/50"
+                ><b class="text-ink">On target</b> for lunch</small
+              >
+            </article>
+            <article class="rounded-2xl bg-soft p-5">
+              <span class="text-xs text-black/50">Action needed</span
+              ><strong
+                class="mt-3 block text-3xl font-extrabold tracking-tight text-accent"
+                >3 items</strong
+              ><small class="mt-6 block text-[11px] text-black/50"
+                >Low stock before dinner service</small
+              ><button
+                class="mt-3 block text-xs font-bold text-accent"
+                id="stockButton"
+              >
+                Review now <i class="icon-arrow-right"></i>
+              </button>
+            </article>
+          </section>
+          <section class="mt-5 grid gap-5 xl:grid-cols-[1.2fr_.8fr]">
+            <article
+              class="overflow-hidden rounded-2xl border border-black/10 bg-paper shadow-card"
+            >
+              <div class="flex items-start justify-between p-5">
+                <div>
+                  <p
+                    class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent"
+                  >
+                    Service book
+                  </p>
+                  <h2 class="mt-1 text-xl font-bold tracking-tight">
+                    Upcoming arrivals
+                  </h2>
+                </div>
+                <button
+                  class="grid h-8 w-8 place-items-center rounded-lg hover:bg-black/5"
+                  aria-label="Booking options"
+                >
+                  <i class="icon-ellipsis"></i>
+                </button>
+              </div>
+              <div class="flex gap-5 border-b border-black/10 px-5">
+                <button class="border-b-2 border-accent pb-3 text-xs font-bold">
+                  All <span class="font-[DM_Mono]">12</span></button
+                ><button class="pb-3 text-xs text-black/45">
+                  Walk-ins <span class="font-[DM_Mono]">3</span></button
+                ><button class="pb-3 text-xs text-black/45">
+                  VIP <span class="font-[DM_Mono]">2</span>
+                </button>
+              </div>
+              <div class="divide-y divide-black/10">
+                <div
+                  class="grid grid-cols-[46px_34px_1fr_24px] items-center gap-3 p-4 sm:grid-cols-[55px_36px_1fr_auto_28px]"
+                >
+                  <time class="font-[DM_Mono] text-xs"
+                    >12:15<small
+                      class="mt-1 block font-[Inter] text-[10px] text-black/45"
+                      >in 8 min</small
+                    ></time
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-full bg-[#ffd6c3] font-[DM_Mono] text-[10px]"
+                    >JM</span
+                  ><span
+                    ><strong class="block text-xs">James Morrison</strong
+                    ><small class="text-[11px] text-black/50"
+                      >4 guests · Table 14</small
+                    ></span
+                  ><span
+                    class="hidden rounded bg-soft px-2 py-1 font-[DM_Mono] text-[10px] text-accent sm:block"
+                    >Birthday</span
+                  ><i class="icon-chevron-right text-black/40"></i>
+                </div>
+                <div
+                  class="grid grid-cols-[46px_34px_1fr_24px] items-center gap-3 p-4 sm:grid-cols-[55px_36px_1fr_auto_28px]"
+                >
+                  <time class="font-[DM_Mono] text-xs"
+                    >12:30<small
+                      class="mt-1 block font-[Inter] text-[10px] text-black/45"
+                      >in 23 min</small
+                    ></time
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-full bg-[#e4ddff] font-[DM_Mono] text-[10px]"
+                    >SA</span
+                  ><span
+                    ><strong class="block text-xs">Sarah Adams</strong
+                    ><small class="text-[11px] text-black/50"
+                      >2 guests · Table 06</small
+                    ></span
+                  ><span
+                    class="hidden rounded bg-black/5 px-2 py-1 font-[DM_Mono] text-[10px] sm:block"
+                    >Window</span
+                  ><i class="icon-chevron-right text-black/40"></i>
+                </div>
+                <div
+                  class="grid grid-cols-[46px_34px_1fr_24px] items-center gap-3 p-4 sm:grid-cols-[55px_36px_1fr_auto_28px]"
+                >
+                  <time class="font-[DM_Mono] text-xs"
+                    >12:45<small
+                      class="mt-1 block font-[Inter] text-[10px] text-black/45"
+                      >in 38 min</small
+                    ></time
+                  ><span
+                    class="grid h-8 w-8 place-items-center rounded-full bg-[#f9e698] font-[DM_Mono] text-[10px]"
+                    >DN</span
+                  ><span
+                    ><strong class="block text-xs">Daniel Norton</strong
+                    ><small class="text-[11px] text-black/50"
+                      >6 guests · Table 21</small
+                    ></span
+                  ><span
+                    class="hidden rounded bg-soft px-2 py-1 font-[DM_Mono] text-[10px] text-accent sm:block"
+                    >VIP</span
+                  ><i class="icon-chevron-right text-black/40"></i>
+                </div>
+              </div>
+              <button
+                class="w-full p-4 text-left text-xs font-bold text-accent"
+              >
+                View all bookings <i class="icon-arrow-right"></i>
+              </button>
+            </article>
+            <article
+              class="rounded-2xl border border-black/10 bg-plum p-5 text-white shadow-card"
+            >
+              <div class="flex justify-between">
+                <div>
+                  <p
+                    class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-lime"
+                  >
+                    Floor pulse
+                  </p>
+                  <h2 class="mt-1 text-xl font-bold">Service tempo</h2>
+                </div>
+                <span
+                  class="h-fit rounded-full bg-lime px-2 py-1 font-[DM_Mono] text-[10px] text-ink"
+                  >● Live</span
+                >
+              </div>
+              <div class="mt-6 flex items-end justify-between">
+                <div>
+                  <strong class="text-4xl font-extrabold">82%</strong
+                  ><span class="ml-1 text-xs text-white/55">seated</span>
+                </div>
+                <span class="text-[11px] text-white/55"
+                  ><i
+                    class="mr-1 inline-block h-2 w-2 rounded-full bg-accent"
+                  ></i
+                  >Covers</span
+                >
+              </div>
+              <div
+                class="mt-5 flex h-28 items-end gap-2 border-b border-white/15 pb-2"
+              >
+                <i class="w-full rounded-t bg-white/15" style="height: 24%"></i
+                ><i class="w-full rounded-t bg-white/20" style="height: 36%"></i
+                ><i class="w-full rounded-t bg-white/25" style="height: 42%"></i
+                ><i class="w-full rounded-t bg-accent" style="height: 68%"></i
+                ><i class="w-full rounded-t bg-accent" style="height: 80%"></i
+                ><i class="w-full rounded-t bg-lime" style="height: 94%"></i
+                ><i class="w-full rounded-t bg-lime" style="height: 74%"></i>
+              </div>
+              <div
+                class="mt-3 flex justify-between font-[DM_Mono] text-[10px] text-white/40"
+              >
+                <span>12 PM</span><span>1 PM</span><span>2 PM</span
+                ><span>3 PM</span>
+              </div>
+              <div
+                class="mt-6 flex justify-between border-t border-white/10 pt-4 text-[11px] text-white/55"
+              >
+                <span><b class="text-white">23</b> covers remaining</span
+                ><span><b class="text-white">1h 18m</b> peak window</span>
+              </div>
+            </article>
+          </section>
+        </main>
+        <footer
+          class="flex justify-between border-t border-black/10 px-4 py-4 text-[10px] text-black/40 md:px-8"
+        >
+          <span>OrderPortal Operations · Shoreditch</span
+          ><span
+            >Last synced just now <i class="icon-cloud-check text-[#5eac72]"></i
+          ></span>
+        </footer>
+      </div>
+    </div>
+    <div class="fixed inset-0 z-40 hidden bg-black/40" id="scrim"></div>
+    <aside
+      class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md translate-x-full flex-col bg-paper p-6 shadow-2xl transition-transform"
+      id="slidePanel"
+      aria-labelledby="notesTitle"
+    >
+      <div
+        class="flex items-start justify-between border-b border-black/10 pb-5"
+      >
+        <div>
+          <p
+            class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent"
+          >
+            Shift handover
+          </p>
+          <h2 class="mt-1 text-2xl font-bold tracking-tight" id="notesTitle">
+            Service notes
+          </h2>
+        </div>
+        <button
+          class="grid h-9 w-9 place-items-center rounded-lg hover:bg-black/5"
+          id="closePanel"
+          aria-label="Close"
+        >
+          <i class="icon-x"></i>
+        </button>
+      </div>
+      <div class="space-y-4 py-5">
+        <article class="flex gap-4 border-b border-black/10 pb-4">
+          <span class="font-[DM_Mono] text-xs text-accent">01</span>
+          <div>
+            <strong class="text-sm">Allergies</strong>
+            <p class="mt-1 text-xs leading-relaxed text-black/55">
+              Table 14 has a severe shellfish allergy. Brief the pass before
+              mains.
+            </p>
+          </div>
+        </article>
+        <article class="flex gap-4 border-b border-black/10 pb-4">
+          <span class="font-[DM_Mono] text-xs text-accent">02</span>
+          <div>
+            <strong class="text-sm">Private dining</strong>
+            <p class="mt-1 text-xs leading-relaxed text-black/55">
+              Orchard Room needs resetting for the 18:30 wine dinner.
+            </p>
+          </div>
+        </article>
+      </div>
+      <label class="text-xs font-semibold"
+        >Add a note for the next shift<textarea
+          class="mt-2 h-28 w-full resize-none rounded-xl border border-black/15 p-3 text-sm outline-none focus:border-accent"
+          placeholder="Write a concise handover..."
+        ></textarea></label
+      ><button
+        class="mt-4 h-11 w-full rounded-xl bg-accent text-sm font-bold text-white"
+      >
+        Save note
+      </button>
+    </aside>
+    <dialog
+      class="w-[calc(100%-2rem)] max-w-sm rounded-2xl border-0 p-0 shadow-2xl backdrop:bg-black/40"
+      id="bookingDialog"
+    >
+      <form method="dialog" class="relative p-7">
+        <button
+          class="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-lg hover:bg-black/5"
+          value="cancel"
+          aria-label="Close"
+        >
+          <i class="icon-x"></i></button
+        ><span
+          class="grid h-10 w-10 place-items-center rounded-xl bg-soft text-accent"
+          ><i class="icon-calendar-plus"></i
+        ></span>
+        <p
+          class="mt-5 font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent"
+        >
+          New reservation
+        </p>
+        <h2 class="mt-1 text-2xl font-bold tracking-tight">
+          Create a booking?
+        </h2>
+        <p class="mt-2 text-sm leading-relaxed text-black/55">
+          This action opens the booking flow and temporarily holds the selected
+          table.
+        </p>
+        <div class="mt-6 flex justify-end gap-2">
+          <button
+            class="h-10 rounded-xl border border-black/15 px-4 text-sm font-semibold"
+            value="cancel"
+          >
+            Cancel</button
+          ><button
+            class="h-10 rounded-xl bg-accent px-4 text-sm font-bold text-white"
+            value="default"
+          >
+            Continue <i class="icon-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <script src="app.js"></script>
+  </body>
+</html>
