@@ -162,6 +162,9 @@
           <button
             id="mobileRail"
             class="mr-3 grid h-9 w-9 place-items-center rounded-lg bg-panel lg:hidden"
+            aria-controls="rail"
+            aria-expanded="false"
+            aria-label="Open service navigation"
           >
             <i class="icon-menu"></i></button
           ><a
@@ -256,8 +259,13 @@
           </div>
         </header>
         <main
-          class="hidden mx-auto max-w-[1680px] p-4 pt-[92px] md:p-7 md:pt-[92px]"
+          id="orderportalContent"
+          class="mx-auto max-w-[1600px] px-4 py-7 text-white md:px-8"
+        ></main>
+        <main
+          class="mx-auto max-w-[1680px] p-4 pt-[92px] md:p-7 md:pt-[92px]"
           id="command"
+          hidden
         >
           <section
             class="flex flex-col justify-between gap-4 border-b border-line pb-6 md:flex-row md:items-end"
@@ -608,6 +616,10 @@
     <aside
       id="notesPanel"
       class="fixed inset-y-0 right-0 z-50 w-full max-w-sm translate-x-full border-l border-line bg-panel p-6 shadow-2xl transition-transform"
+      aria-labelledby="notesTitle"
+      aria-modal="true"
+      role="dialog"
+      inert
     >
       <div class="flex items-start justify-between">
         <div>
@@ -616,12 +628,13 @@
           >
             Shift notes
           </p>
-          <h2 class="mt-1 font-[Space_Grotesk] text-2xl font-bold">
+          <h2 id="notesTitle" class="mt-1 font-[Space_Grotesk] text-2xl font-bold">
             Handover board
           </h2>
         </div>
         <button
           id="closeNotes"
+          aria-label="Close shift notes"
           class="grid h-9 w-9 place-items-center rounded-lg hover:bg-white/5"
         >
           <i class="icon-x"></i>
@@ -783,10 +796,61 @@
           Search is a command, not a destination
         </p>
       </div>
-    </section>
+      </section>
+    <script>
+      fetch("concept-orderportal.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const source = new DOMParser().parseFromString(html, "text/html");
+          const target = document.querySelector("#orderportalContent");
+          const classes = {
+            "bg-paper": "bg-panel", "bg-plum": "bg-panel", "bg-accent": "bg-acid",
+            "bg-soft": "bg-panel", "bg-lime": "bg-acid", "text-ink": "text-night",
+            "text-accent": "text-acid", "text-lime": "text-acid", "text-black/45": "text-white/45",
+            "text-black/50": "text-white/50", "text-black/40": "text-white/40", "border-black/10": "border-line",
+            "divide-black/10": "divide-line", "hover:bg-black/5": "hover:bg-white/5", "shadow-card": "shadow-glow",
+          };
+          target.innerHTML = source.querySelector("main").innerHTML;
+          target.querySelectorAll("[class]").forEach((element) => {
+            element.className = element.className.split(" ").map((name) => classes[name] || name).join(" ");
+          });
+          target.querySelectorAll("article.bg-acid").forEach((card) => {
+            card.classList.replace("text-white", "text-night");
+            card.querySelectorAll("[class]").forEach((element) => {
+              element.className = element.className
+                .replaceAll("text-white/70", "text-night/70")
+                .replaceAll("text-white/65", "text-night/65")
+                .replaceAll("text-white/75", "text-night/75")
+                .replaceAll("text-acid", "text-night");
+            });
+            card.querySelectorAll(".bg-acid").forEach((element) => {
+              if (element !== card) element.classList.replace("bg-acid", "bg-night");
+            });
+          });
+        });
+    </script>
     <script>
       const $ = (s) => document.querySelector(s),
         show = (el, on) => el.classList.toggle("hidden", !on);
+      const trapFocus = (event, container) => {
+        if (event.key !== "Tab") return;
+        const focusable = [
+          ...container.querySelectorAll(
+            "a[href], button:not([disabled]), textarea, input, select",
+          ),
+        ];
+        const first = focusable[0], last = focusable.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      };
+      $("#notesPanel").addEventListener("keydown", (event) =>
+        trapFocus(event, $("#notesPanel")),
+      );
       document.querySelectorAll("[data-tip]").forEach((item, index) => {
         const tooltip = document.createElement("span");
         const tooltipId = `service-tooltip-${index}`;
@@ -832,11 +896,19 @@
         show($("#alertPanel"), $("#alertPanel").classList.contains("hidden"));
       $("#notes").onclick = () => {
         $("#notesPanel").classList.remove("translate-x-full");
+        $("#notesPanel").removeAttribute("inert");
+        $("#workspace").setAttribute("inert", "");
+        $("#rail").setAttribute("inert", "");
         show($("#scrim"), true);
+        $("#closeNotes").focus();
       };
       $("#closeNotes").onclick = $("#scrim").onclick = () => {
         $("#notesPanel").classList.add("translate-x-full");
+        $("#notesPanel").setAttribute("inert", "");
         show($("#scrim"), false);
+        $("#workspace").removeAttribute("inert");
+        syncMobileRail();
+        $("#notes").focus();
       };
       let commandCategory = "All";
       const filterCommand = () => {
@@ -891,10 +963,29 @@
           event.preventDefault();
           openCommand();
         }
-        if (event.key === "Escape") closeCommand();
+        if (event.key === "Escape") {
+          if (!$("#notesPanel").hasAttribute("inert")) $("#closeNotes").click();
+          else if (window.innerWidth < 1024 && !$("#rail").classList.contains("-translate-x-full")) {
+            $("#mobileRail").click();
+          } else closeCommand();
+        }
       };
-      $("#mobileRail").onclick = () =>
-        $("#rail").classList.toggle("-translate-x-full");
+      const syncMobileRail = () => {
+        const rail = $("#rail");
+        if (window.innerWidth >= 1024) rail.removeAttribute("inert");
+        else if (rail.classList.contains("-translate-x-full")) rail.setAttribute("inert", "");
+      };
+      syncMobileRail();
+      window.addEventListener("resize", syncMobileRail);
+      $("#mobileRail").onclick = () => {
+        const rail = $("#rail");
+        const opening = rail.classList.contains("-translate-x-full");
+        rail.classList.toggle("-translate-x-full", !opening);
+        rail.toggleAttribute("inert", !opening);
+        $("#mobileRail").setAttribute("aria-expanded", String(opening));
+        if (opening) rail.querySelector("a, button").focus();
+        else $("#mobileRail").focus();
+      };
       $("#railToggle").onclick = () => {
         const r = $("#rail"),
           wide = r.classList.contains("lg:w-[110px]");
