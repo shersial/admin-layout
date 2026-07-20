@@ -153,6 +153,8 @@
             class="mr-2 grid h-9 w-9 place-items-center rounded-lg hover:bg-black/5 lg:hidden"
             id="mobileMenu"
             aria-label="Open navigation"
+            aria-expanded="false"
+            aria-controls="sidebar"
           >
             <i class="icon-menu text-lg"></i>
           </button>
@@ -399,7 +401,7 @@
           </div>
         </header>
 
-        <main class="hidden mx-auto max-w-[1600px] px-4 py-7 md:px-8">
+        <main class="mx-auto max-w-[1600px] px-4 py-7 md:px-8">
           <div class="flex items-center gap-1 text-xs text-black/45">
             <span>Overview</span><i class="icon-chevron-right text-xs"></i
             ><span>Today</span>
@@ -681,6 +683,9 @@
       class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md translate-x-full flex-col bg-paper p-6 shadow-2xl transition-transform"
       id="slidePanel"
       aria-labelledby="notesTitle"
+      aria-modal="true"
+      role="dialog"
+      inert
     >
       <div
         class="flex items-start justify-between border-b border-black/10 pb-5"

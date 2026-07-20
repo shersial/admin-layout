@@ -128,7 +128,11 @@
         </div>
       </div>
     </header>
-    <div class="mx-auto max-w-[1600px] px-5 py-7 md:px-8">
+    <main
+      id="orderportalContent"
+      class="mx-auto max-w-[1600px] px-4 py-7 font-[DM_Sans] text-ink md:px-8"
+    ></main>
+    <div class="mx-auto hidden max-w-[1600px] px-5 py-7 md:px-8">
       <section
         class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
       >
@@ -405,6 +409,9 @@
     <div
       id="searchOverlay"
       class="fixed inset-0 z-50 hidden bg-navy/30 p-4 backdrop-blur-sm"
+      aria-label="Search insights"
+      aria-modal="true"
+      role="dialog"
     >
       <div class="mx-auto mt-20 max-w-xl rounded-2xl bg-white p-4 shadow-soft">
         <label class="flex items-center gap-3 border-b border-navy/10 pb-3"
@@ -434,6 +441,10 @@
     <div
       id="campaignPanel"
       class="fixed inset-y-0 right-0 z-50 w-full max-w-md translate-x-full bg-white p-6 shadow-2xl transition-transform"
+      aria-labelledby="campaignTitle"
+      aria-modal="true"
+      role="dialog"
+      inert
     >
       <div class="flex justify-between">
         <div>
@@ -442,13 +453,14 @@
           >
             Campaign builder
           </p>
-          <h2 class="mt-1 font-[Space_Grotesk] text-2xl font-bold text-navy">
+          <h2 id="campaignTitle" class="mt-1 font-[Space_Grotesk] text-2xl font-bold text-navy">
             Recover Saturday.
           </h2>
         </div>
         <button
           id="closeCampaign"
           class="grid h-9 w-9 place-items-center rounded-lg hover:bg-mist"
+          aria-label="Close campaign builder"
         >
           <i class="icon-x"></i>
         </button>
@@ -471,29 +483,102 @@ Enjoy a complimentary side with lunch this Saturday.</textarea></label
       </button>
     </div>
     <script>
+      fetch("concept-orderportal.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const source = new DOMParser().parseFromString(html, "text/html");
+          const target = document.querySelector("#orderportalContent");
+          const classes = {
+            "bg-paper": "bg-white", "bg-plum": "bg-navy", "bg-accent": "bg-navy",
+            "bg-soft": "bg-mist", "bg-lime": "bg-coral", "text-ink": "text-navy",
+            "text-accent": "text-blue", "text-lime": "text-coral", "text-black/45": "text-navy/45",
+            "text-black/50": "text-navy/50", "text-black/40": "text-navy/40", "border-black/10": "border-navy/10",
+            "divide-black/10": "divide-navy/10", "hover:bg-black/5": "hover:bg-mist", "shadow-card": "shadow-soft",
+            "font-[Inter]": "font-[DM_Sans]",
+          };
+          target.innerHTML = source.querySelector("main").innerHTML;
+          target.querySelectorAll("[class]").forEach((element) => {
+            element.className = element.className.split(" ").map((name) => classes[name] || name).join(" ");
+          });
+        });
+    </script>
+    <script>
       const $ = (s) => document.querySelector(s),
         toggle = (x, on) => x.classList.toggle("hidden", !on);
+      const trapFocus = (event, container) => {
+        if (event.key !== "Tab") return;
+        const focusable = [
+          ...container.querySelectorAll(
+            "a[href], button:not([disabled]), textarea, input, select",
+          ),
+        ];
+        const first = focusable[0], last = focusable.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      };
+      const setBackgroundInert = (open) => {
+        [...document.body.children].forEach((element) => {
+          if (
+            element.tagName !== "SCRIPT" &&
+            element.id !== "searchOverlay" &&
+            element.id !== "campaignPanel"
+          )
+            element.toggleAttribute("inert", open);
+        });
+      };
+      $("#searchOverlay").addEventListener("keydown", (event) =>
+        trapFocus(event, $("#searchOverlay")),
+      );
+      $("#campaignPanel").addEventListener("keydown", (event) =>
+        trapFocus(event, $("#campaignPanel")),
+      );
       $("#notice").onclick = () =>
         toggle(
           $("#noticePanel"),
           $("#noticePanel").classList.contains("hidden"),
         );
-      $("#globalSearch").onclick = () => toggle($("#searchOverlay"), true);
+      const openSearch = () => {
+        toggle($("#searchOverlay"), true);
+        setBackgroundInert(true);
+        $("#searchField").focus();
+      };
+      const closeSearch = () => {
+        toggle($("#searchOverlay"), false);
+        setBackgroundInert(false);
+        $("#globalSearch").focus();
+      };
+      $("#globalSearch").onclick = openSearch;
       document.onkeydown = (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === "k") {
           e.preventDefault();
-          toggle($("#searchOverlay"), true);
+          openSearch();
         }
-        if (e.key === "Escape") toggle($("#searchOverlay"), false);
+        if (e.key === "Escape") {
+          if (!$("#campaignPanel").hasAttribute("inert")) $("#closeCampaign").click();
+          else if (!$("#searchOverlay").classList.contains("hidden")) closeSearch();
+        }
       };
       $("#searchOverlay").onclick = (e) => {
         if (e.target === $("#searchOverlay"))
-          toggle($("#searchOverlay"), false);
+          closeSearch();
       };
-      $("#campaign").onclick = () =>
+      $("#campaign").onclick = () => {
         $("#campaignPanel").classList.remove("translate-x-full");
-      $("#closeCampaign").onclick = () =>
+        $("#campaignPanel").removeAttribute("inert");
+        setBackgroundInert(true);
+        $("#closeCampaign").focus();
+      };
+      $("#closeCampaign").onclick = () => {
         $("#campaignPanel").classList.add("translate-x-full");
+        $("#campaignPanel").setAttribute("inert", "");
+        setBackgroundInert(false);
+        $("#campaign").focus();
+      };
       document.onclick = (e) => {
         if (!e.target.closest("#notice,#noticePanel"))
           toggle($("#noticePanel"), false);

@@ -2,6 +2,26 @@ const $ = (selector) => document.querySelector(selector);
 const sidebar = $("#sidebar");
 const panel = $("#slidePanel");
 const scrim = $("#scrim");
+let panelOpener;
+
+function trapFocus(event, container) {
+  if (event.key !== "Tab") return;
+  const focusable = [
+    ...container.querySelectorAll(
+      "a[href], button:not([disabled]), textarea, input, select",
+    ),
+  ];
+  const first = focusable[0], last = focusable.at(-1);
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+panel.addEventListener("keydown", (event) => trapFocus(event, panel));
 
 sidebar.querySelectorAll(".sidebar-item").forEach((item) => {
   const tooltip = document.createElement("span");
@@ -104,25 +124,57 @@ $("#menuGroup").addEventListener("click", () => {
     : "sidebar-chevron icon-chevron-up ml-auto";
 });
 
-function togglePanel(open) {
+function togglePanel(open, opener) {
+  if (open) panelOpener = opener || document.activeElement;
   panel.classList.toggle("translate-x-full", !open);
+  panel.toggleAttribute("inert", !open);
+  $("#appShell").toggleAttribute("inert", open);
   scrim.classList.toggle("hidden", !open);
+  if (open) $("#closePanel").focus();
+  else panelOpener?.focus();
 }
 
-$("#panelTrigger").addEventListener("click", () => togglePanel(true));
-$("#stockButton").addEventListener("click", () => togglePanel(true));
+$("#panelTrigger").addEventListener("click", (event) => togglePanel(true, event.currentTarget));
+$("#stockButton").addEventListener("click", (event) => togglePanel(true, event.currentTarget));
 $("#closePanel").addEventListener("click", () => togglePanel(false));
 scrim.addEventListener("click", () => {
   togglePanel(false);
-  sidebar.classList.add("-translate-x-full");
+  closeMobileMenu();
 });
 
 $("#newBooking").addEventListener("click", () =>
   $("#bookingDialog").showModal(),
 );
+function closeMobileMenu() {
+  sidebar.classList.add("-translate-x-full");
+  sidebar.setAttribute("inert", "");
+  scrim.classList.add("hidden");
+  $("#mobileMenu").setAttribute("aria-expanded", "false");
+}
+
+function syncMobileNavigation() {
+  if (window.innerWidth >= 1024) sidebar.removeAttribute("inert");
+  else if (sidebar.classList.contains("-translate-x-full")) sidebar.setAttribute("inert", "");
+}
+
+syncMobileNavigation();
+window.addEventListener("resize", syncMobileNavigation);
+
 $("#mobileMenu").addEventListener("click", () => {
   sidebar.classList.remove("-translate-x-full");
+  sidebar.removeAttribute("inert");
   scrim.classList.remove("hidden");
+  $("#mobileMenu").setAttribute("aria-expanded", "true");
+  sidebar.querySelector("a, button").focus();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (!panel.classList.contains("translate-x-full")) togglePanel(false);
+  else if (window.innerWidth < 1024 && !sidebar.classList.contains("-translate-x-full")) {
+    closeMobileMenu();
+    $("#mobileMenu").focus();
+  }
 });
 
 function toggleSidebar() {
