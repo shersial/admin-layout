@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OrderPortal live restaurant orders" />
+    <title>OrderPortal | Live orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { colors: { ink: "#0f0f0f", plum: "#4a0929", paper: "#ffffff", accent: "#b81969", soft: "#f6c0db", lime: "#f9f804" }, boxShadow: { card: "0 12px 35px rgba(16,16,16,.07)" } } } };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.468.0/font/lucide.css" />
+  </head>
+  <body class="bg-white font-[Inter] text-ink antialiased">
+    <div class="flex min-h-screen" id="appShell">
+      <aside class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-white/10 bg-plum px-2 py-3 text-white transition-[width,transform] duration-200 lg:static lg:translate-x-0" id="sidebar" aria-label="Primary navigation">
+        <div class="mb-4 flex items-center gap-2 px-1">
+          <a class="flex min-w-0 flex-1 items-center gap-2 rounded-lg p-2 hover:bg-white/10" href="concept-orderportal.html">
+            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent font-[DM_Mono] text-sm font-bold text-lime">O</span>
+            <span class="min-w-0 flex-1"><strong class="block truncate text-sm leading-tight">OrderPortal</strong><small class="flex items-center gap-1.5 truncate text-xs text-white/55"><i class="h-1.5 w-1.5 rounded-full bg-[#7bd28e]"></i>Vela, Shoreditch</small></span>
+            <i class="icon-chevrons-up-down text-sm text-white/55"></i>
+          </a>
+        </div>
+        <nav class="min-h-0 flex-1 space-y-4 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <section><p class="px-2 pb-2 font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40">Operations</p><div class="space-y-1">
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="concept-orderportal.html"><i class="icon-layout-dashboard text-lg"></i><span>Overview</span></a>
+            <a class="flex h-9 items-center gap-3 rounded-md bg-white px-2 text-sm font-medium text-ink" href="orders.html"><i class="icon-receipt-text text-lg"></i><span>Live orders</span><b class="ml-auto rounded-full bg-accent px-2 py-0.5 font-[DM_Mono] text-[10px] text-white">12</b></a>
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="concept-orderportal.html#items"><i class="icon-calendar-days text-lg"></i><span>Service book</span></a>
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="#team"><i class="icon-users-round text-lg"></i><span>Team</span></a>
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="#reports"><i class="icon-chart-no-axes-combined text-lg"></i><span>Reports</span></a>
+          </div></section>
+          <section><p class="px-2 pb-2 font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/40">Locations</p><div class="space-y-1">
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="#shoreditch"><i class="icon-map-pin text-lg"></i><span>Shoreditch</span></a>
+            <a class="flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" href="#notting-hill"><i class="icon-map-pin text-lg"></i><span>Notting Hill</span></a>
+          </div></section>
+        </nav>
+      </aside>
+
+      <div class="min-w-0 flex-1">
+        <header class="sticky top-0 z-30 flex h-[72px] items-center border-b border-black/10 bg-paper px-4 md:px-8">
+          <button class="mr-2 grid h-9 w-9 place-items-center rounded-lg hover:bg-black/5 lg:hidden" id="mobileMenu" aria-label="Open navigation" aria-expanded="false"><i class="icon-menu text-lg"></i></button>
+          <button class="mr-2 hidden h-9 w-9 place-items-center rounded-lg text-black/55 hover:bg-black/5 lg:grid" id="sidebarToggle" aria-label="Collapse sidebar" type="button"><i class="icon-panel-left-close"></i></button>
+          <div class="hidden items-center gap-1 text-xs text-black/45 sm:flex"><span>Operations</span><i class="icon-chevron-right text-xs"></i><span>Live orders</span></div>
+          <label class="absolute left-1/2 hidden w-72 -translate-x-1/2 items-center gap-3 rounded-lg border border-black/10 bg-[#fbfafb] px-4 py-2 text-xs text-black/45 lg:flex"><i class="icon-search text-sm"></i><input class="min-w-0 flex-1 bg-transparent outline-none placeholder:text-black/45" id="orderSearch" placeholder="Search order, table, or guest" type="search" /><kbd class="rounded border border-black/10 px-1.5 py-0.5 font-[DM_Mono] text-[10px]">Ctrl K</kbd></label>
+          <div class="ml-auto flex items-center gap-2"><button class="relative grid h-9 w-9 place-items-center rounded-lg text-black/60 hover:bg-black/5" aria-label="Notifications"><i class="icon-bell"></i><span class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent"></span></button><span class="grid h-8 w-8 place-items-center rounded-full bg-plum font-[DM_Mono] text-[10px] text-lime">AK</span></div>
+        </header>
+
+        <main class="mx-auto max-w-[1600px] px-4 py-7 md:px-8">
+          <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div><p class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent">Live service · 12:07</p><h1 class="mt-2 text-3xl font-extrabold tracking-[-.05em] md:text-4xl">Live orders</h1><p class="mt-2 text-sm text-black/55">Every channel, table, and ticket in one service queue.</p></div>
+            <button class="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-white hover:bg-[#9e0e57]"><i class="icon-plus"></i>New order</button>
+          </section>
+
+          <section class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Order summary">
+            <article class="rounded-xl bg-plum p-4 text-white"><p class="text-xs text-white/60">Open orders</p><strong class="mt-2 block text-3xl font-bold">12</strong><p class="mt-3 text-xs text-lime">4 need attention</p></article>
+            <article class="rounded-xl border border-black/10 bg-paper p-4 shadow-card"><p class="text-xs text-black/50">Kitchen average</p><strong class="mt-2 block text-3xl font-bold">9 min</strong><p class="mt-3 text-xs text-[#48845a]">2 min faster than target</p></article>
+            <article class="rounded-xl border border-black/10 bg-paper p-4 shadow-card"><p class="text-xs text-black/50">Pickup & delivery</p><strong class="mt-2 block text-3xl font-bold">5</strong><p class="mt-3 text-xs text-black/50">Next pickup at 12:18</p></article>
+            <article class="rounded-xl border border-black/10 bg-paper p-4 shadow-card"><p class="text-xs text-black/50">Sales in progress</p><strong class="mt-2 block text-3xl font-bold">£382</strong><p class="mt-3 text-xs text-black/50">Across 31 covers</p></article>
+          </section>
+
+          <section class="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <div class="overflow-hidden rounded-xl border border-black/10 bg-paper shadow-card">
+              <div class="flex flex-col gap-3 border-b border-black/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex gap-1 overflow-x-auto rounded-lg bg-black/[.035] p-1 text-xs whitespace-nowrap" id="orderTabs"><button class="rounded-md bg-paper px-3 py-1.5 font-semibold text-ink shadow-sm" data-filter="all">All</button><button class="rounded-md px-3 py-1.5 text-black/55" data-filter="preparing">Preparing</button><button class="rounded-md px-3 py-1.5 text-black/55" data-filter="pickup">Ready for pickup</button><button class="rounded-md px-3 py-1.5 text-black/55" data-filter="delivery">On delivery</button><button class="rounded-md px-3 py-1.5 text-black/55" data-filter="completed">Completed</button></div>
+                <div class="flex items-center gap-2"><label class="sr-only" for="sourceFilter">Order source</label><select class="h-8 rounded-lg border border-black/10 bg-paper px-2 text-xs font-medium text-black/65 outline-none focus:border-accent" id="sourceFilter"><option value="all">All channels</option><option value="dine-in">Dine-in</option><option value="pickup">Pickup</option><option value="delivery">Delivery</option></select><button class="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-black/10 px-3 text-xs font-semibold hover:bg-black/5" id="clearFilters" type="button"><i class="icon-list-filter"></i>Clear</button></div>
+              </div>
+              <div class="divide-y divide-black/10" id="orderList">
+                <button class="order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]" data-status="preparing" data-channel="dine-in" data-search="1048 table 14 james morrison sea bass"><span class="grid h-10 w-10 place-items-center rounded-lg bg-soft font-[DM_Mono] text-xs font-bold text-accent">#48</span><span><strong class="block text-sm">Table 14 <span class="ml-1 font-normal text-black/45">· James Morrison</span></strong><small class="mt-1 block text-xs text-black/50">Sea bass, burrata, 2 × spritz</small></span><span class="text-right"><b class="block font-[DM_Mono] text-xs text-accent">14 min left</b><small class="mt-1 inline-flex items-center gap-1 text-[11px] text-[#9a6b18]"><i class="h-1.5 w-1.5 rounded-full bg-[#d6a72c]"></i>Preparing</small></span></button>
+                <button class="order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]" data-status="pickup" data-channel="pickup" data-search="1047 takeaway anika patel chicken caesar"><span class="grid h-10 w-10 place-items-center rounded-lg bg-[#dff4e4] font-[DM_Mono] text-xs font-bold text-[#387246]">#47</span><span><strong class="block text-sm">Pickup <span class="ml-1 font-normal text-black/45">· Anika Patel</span></strong><small class="mt-1 block text-xs text-black/50">Chicken caesar, fries, sparkling water</small></span><span class="text-right"><b class="block font-[DM_Mono] text-xs text-[#48845a]">Ready</b><small class="mt-1 inline-flex items-center gap-1 text-[11px] text-[#48845a]"><i class="h-1.5 w-1.5 rounded-full bg-[#5eac72]"></i>Awaiting pickup</small></span></button>
+                <button class="order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]" data-status="delivery" data-channel="delivery" data-search="1046 deliveroo luca bianchi rigatoni"><span class="grid h-10 w-10 place-items-center rounded-lg bg-[#e4ddff] font-[DM_Mono] text-xs font-bold text-[#594a94]">#46</span><span><strong class="block text-sm">Deliveroo <span class="ml-1 font-normal text-black/45">· Luca Bianchi</span></strong><small class="mt-1 block text-xs text-black/50">Rigatoni nduja, heritage tomatoes</small></span><span class="text-right"><b class="block font-[DM_Mono] text-xs text-[#594a94]">En route</b><small class="mt-1 inline-flex items-center gap-1 text-[11px] text-[#594a94]"><i class="h-1.5 w-1.5 rounded-full bg-[#7e6eb5]"></i>Driver collected</small></span></button>
+                <button class="order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]" data-status="delivery" data-channel="delivery" data-search="1045 uber eats maya cole halloumi"><span class="grid h-10 w-10 place-items-center rounded-lg bg-[#e4ddff] font-[DM_Mono] text-xs font-bold text-[#594a94]">#45</span><span><strong class="block text-sm">Uber Eats <span class="ml-1 font-normal text-black/45">· Maya Cole</span></strong><small class="mt-1 block text-xs text-black/50">Halloumi flatbread, olives, 2 × lemonade</small></span><span class="text-right"><b class="block font-[DM_Mono] text-xs text-[#594a94]">En route</b><small class="mt-1 inline-flex items-center gap-1 text-[11px] text-[#594a94]"><i class="h-1.5 w-1.5 rounded-full bg-[#7e6eb5]"></i>7 min away</small></span></button>
+                <button class="order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]" data-status="completed" data-channel="dine-in" data-search="1044 table 21 daniel norton lamb"><span class="grid h-10 w-10 place-items-center rounded-lg bg-black/5 font-[DM_Mono] text-xs font-bold text-black/55">#44</span><span><strong class="block text-sm">Table 21 <span class="ml-1 font-normal text-black/45">· Daniel Norton</span></strong><small class="mt-1 block text-xs text-black/50">Lamb rump, market greens, 2 × negroni</small></span><span class="text-right"><b class="block font-[DM_Mono] text-xs text-black/55">Completed</b><small class="mt-1 inline-flex items-center gap-1 text-[11px] text-black/45"><i class="h-1.5 w-1.5 rounded-full bg-black/35"></i>Paid</small></span></button>
+              </div>
+              <p class="hidden p-8 text-center text-sm text-black/50" id="emptyOrders">No orders match this view.</p>
+              <div class="flex items-center justify-between border-t border-black/10 px-4 py-3 text-xs text-black/50" id="pagination"><span id="pageSummary"></span><div class="flex items-center gap-1"><button class="grid h-8 w-8 place-items-center rounded-md border border-black/10 hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-40" id="previousPage" aria-label="Previous page" type="button"><i class="icon-chevron-left"></i></button><div class="flex gap-1" id="pageButtons"></div><button class="grid h-8 w-8 place-items-center rounded-md border border-black/10 hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-40" id="nextPage" aria-label="Next page" type="button"><i class="icon-chevron-right"></i></button></div></div>
+            </div>
+            <aside class="h-fit rounded-xl border border-black/10 bg-paper p-5 shadow-card" id="orderDetail">
+              <div class="flex items-start justify-between"><div><p class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent">Selected order</p><h2 class="mt-1 text-xl font-bold">#1048 · Table 14</h2></div><button class="grid h-8 w-8 place-items-center rounded-lg hover:bg-black/5" aria-label="More actions"><i class="icon-ellipsis"></i></button></div>
+              <div class="mt-5 flex items-center gap-3 rounded-lg bg-soft/60 p-3"><span class="grid h-9 w-9 place-items-center rounded-full bg-[#ffd6c3] font-[DM_Mono] text-[10px]">JM</span><span><strong class="block text-xs">James Morrison</strong><small class="block text-[11px] text-black/50">4 covers · birthday note</small></span></div>
+              <div class="mt-5 space-y-3 border-y border-black/10 py-4 text-sm"><div class="flex justify-between"><span>Sea bass</span><strong>£28.00</strong></div><div class="flex justify-between"><span>Burrata</span><strong>£12.00</strong></div><div class="flex justify-between"><span>Spritz <small class="text-black/45">×2</small></span><strong>£24.00</strong></div></div>
+              <div class="mt-4 flex justify-between text-sm"><span class="text-black/50">Total</span><strong>£64.00</strong></div>
+              <div class="mt-5 rounded-lg bg-[#fff1bb] p-3"><p class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-[#9a6b18]">Kitchen status</p><strong class="mt-1 block text-sm">Ready to fire mains</strong><small class="mt-1 block text-[11px] text-black/55">Starter course has been served.</small></div>
+              <button class="mt-5 h-10 w-full rounded-lg bg-accent text-sm font-bold text-white hover:bg-[#9e0e57]">Fire mains <i class="ml-1 icon-arrow-right"></i></button>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/45 p-4" id="incomingOrderModal" role="dialog" aria-modal="true" aria-labelledby="incomingOrderTitle">
+      <div class="w-full max-w-md rounded-2xl bg-paper p-6 shadow-2xl">
+        <div class="flex items-start justify-between"><div><p class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent">New mobile order</p><h2 class="mt-1 text-2xl font-bold tracking-tight" id="incomingOrderTitle">Order #1051</h2></div><button class="grid h-8 w-8 place-items-center rounded-lg hover:bg-black/5" id="declineOrder" aria-label="Decline order" type="button"><i class="icon-x"></i></button></div>
+        <div class="mt-5 flex items-center gap-3 rounded-xl bg-soft/60 p-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-plum font-[DM_Mono] text-xs text-lime" id="incomingInitials">MC</span><span><strong class="block text-sm" id="incomingGuest">Maya Chen</strong><small class="block text-xs text-black/50" id="incomingChannel">OrderPortal mobile app · Delivery</small></span></div>
+        <div class="mt-5 space-y-3 border-y border-black/10 py-4 text-sm" id="incomingItems"></div>
+        <div class="mt-4 flex justify-between text-sm"><span class="text-black/50">Requested fulfilment</span><strong id="incomingFulfilment">Delivery · 12:35</strong></div>
+        <div class="mt-6 grid grid-cols-2 gap-2"><button class="h-10 rounded-xl border border-black/15 text-sm font-semibold hover:bg-black/5" id="rejectOrder" type="button">Decline</button><button class="h-10 rounded-xl bg-accent text-sm font-bold text-white hover:bg-[#9e0e57]" id="acceptOrder" type="button">Accept order <i class="ml-1 icon-check"></i></button></div>
+      </div>
+    </div>
+    <script>
+      const sidebar = document.querySelector("#sidebar");
+      document.querySelector("#sidebarToggle").addEventListener("click", () => {
+        const collapsed = sidebar.classList.toggle("w-[68px]");
+        sidebar.classList.toggle("w-64", !collapsed);
+        sidebar.querySelectorAll("a span:not(:first-child), a small, a b").forEach((item) => item.classList.toggle("hidden", collapsed));
+        document.querySelector("#sidebarToggle i").className = collapsed ? "icon-panel-left-open" : "icon-panel-left-close";
+      });
+      document.querySelector("#mobileMenu").addEventListener("click", () => sidebar.classList.toggle("-translate-x-full"));
+      let filter = "all";
+      let currentPage = 1;
+      const pageSize = 4;
+      let nextOrderNumber = 1051;
+      let incomingOrder;
+      const modal = document.querySelector("#incomingOrderModal");
+      const mobileOrders = [
+        { guest: "Maya Chen", initials: "MC", channel: "Delivery", items: [["Aubergine schnitzel", "£16.00"], ["Heritage tomato salad", "£8.00"], ["Lemonade ×2", "£7.00"]], total: "£31.00" },
+        { guest: "Owen Reid", initials: "OR", channel: "Pickup", items: [["Chicken caesar", "£15.00"], ["Rosemary fries", "£5.00"], ["Still water", "£3.00"]], total: "£23.00" },
+        { guest: "Priya Shah", initials: "PS", channel: "Delivery", items: [["Sea bass", "£28.00"], ["Tenderstem broccoli", "£6.00"], ["Sparkling water", "£4.00"]], total: "£38.00" },
+      ];
+      const statusCopy = {
+        preparing: { label: "Preparing", tone: "text-[#9a6b18]", dot: "bg-[#d6a72c]" },
+        pickup: { label: "Awaiting pickup", tone: "text-[#48845a]", dot: "bg-[#5eac72]" },
+        delivery: { label: "On delivery", tone: "text-[#594a94]", dot: "bg-[#7e6eb5]" },
+        completed: { label: "Completed", tone: "text-black/45", dot: "bg-black/35" },
+      };
+      const updateOrders = () => {
+        const term = document.querySelector("#orderSearch").value.toLowerCase();
+        const source = document.querySelector("#sourceFilter").value;
+        const rows = [...document.querySelectorAll(".order-row")];
+        const filtered = rows.filter((row) => (filter === "all" || row.dataset.status === filter) && (source === "all" || row.dataset.channel === source) && row.dataset.search.includes(term));
+        const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        currentPage = Math.min(currentPage, totalPages);
+        const start = (currentPage - 1) * pageSize;
+        rows.forEach((row) => row.classList.toggle("hidden", !filtered.slice(start, start + pageSize).includes(row)));
+        document.querySelector("#emptyOrders").classList.toggle("hidden", filtered.length > 0);
+        document.querySelector("#pageSummary").textContent = filtered.length ? `${start + 1}-${Math.min(start + pageSize, filtered.length)} of ${filtered.length} orders` : "0 orders";
+        document.querySelector("#previousPage").disabled = currentPage === 1;
+        document.querySelector("#nextPage").disabled = currentPage === totalPages;
+        document.querySelector("#pageButtons").innerHTML = Array.from({ length: totalPages }, (_, index) => `<button class="grid h-8 min-w-8 place-items-center rounded-md px-2 ${index + 1 === currentPage ? "bg-plum text-white" : "hover:bg-black/5"}" data-page="${index + 1}" type="button">${index + 1}</button>`).join("");
+        document.querySelectorAll("#pageButtons button").forEach((button) => button.addEventListener("click", () => { currentPage = Number(button.dataset.page); updateOrders(); }));
+      };
+      document.querySelectorAll("#orderTabs button").forEach((button) => button.addEventListener("click", () => {
+        filter = button.dataset.filter;
+        currentPage = 1;
+        document.querySelectorAll("#orderTabs button").forEach((tab) => tab.className = "rounded-md px-3 py-1.5 text-black/55");
+        button.className = "rounded-md bg-paper px-3 py-1.5 font-semibold text-ink shadow-sm";
+        updateOrders();
+      }));
+      document.querySelector("#orderSearch").addEventListener("input", () => { currentPage = 1; updateOrders(); });
+      document.querySelector("#sourceFilter").addEventListener("change", () => { currentPage = 1; updateOrders(); });
+      document.querySelector("#clearFilters").addEventListener("click", () => {
+        filter = "all";
+        currentPage = 1;
+        document.querySelector("#sourceFilter").value = "all";
+        document.querySelector("#orderSearch").value = "";
+        document.querySelectorAll("#orderTabs button").forEach((tab) => tab.className = "rounded-md px-3 py-1.5 text-black/55");
+        document.querySelector('#orderTabs [data-filter="all"]').className = "rounded-md bg-paper px-3 py-1.5 font-semibold text-ink shadow-sm";
+        updateOrders();
+      });
+      document.querySelector("#previousPage").addEventListener("click", () => { currentPage -= 1; updateOrders(); });
+      document.querySelector("#nextPage").addEventListener("click", () => { currentPage += 1; updateOrders(); });
+      document.addEventListener("keydown", (event) => { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); document.querySelector("#orderSearch").focus(); } });
+      function showIncomingOrder() {
+        if (!modal.classList.contains("hidden")) return;
+        incomingOrder = { ...mobileOrders[nextOrderNumber % mobileOrders.length], id: nextOrderNumber++ };
+        document.querySelector("#incomingOrderTitle").textContent = `Order #${incomingOrder.id}`;
+        document.querySelector("#incomingInitials").textContent = incomingOrder.initials;
+        document.querySelector("#incomingGuest").textContent = incomingOrder.guest;
+        document.querySelector("#incomingChannel").textContent = `OrderPortal mobile app · ${incomingOrder.channel}`;
+        document.querySelector("#incomingFulfilment").textContent = `${incomingOrder.channel} · as soon as possible`;
+        document.querySelector("#incomingItems").innerHTML = `${incomingOrder.items.map(([item, price]) => `<div class="flex justify-between"><span>${item}</span><strong>${price}</strong></div>`).join("")}<div class="flex justify-between border-t border-black/10 pt-3 font-bold"><span>Total</span><span>${incomingOrder.total}</span></div>`;
+        modal.classList.replace("hidden", "flex");
+        document.querySelector("#acceptOrder").focus();
+      }
+      function closeIncomingOrder() { modal.classList.replace("flex", "hidden"); }
+      function addAcceptedOrder() {
+        const preparationMinutes = 10 + Math.floor(Math.random() * 11);
+        const search = `${incomingOrder.id} ${incomingOrder.channel} ${incomingOrder.guest} ${incomingOrder.items.map(([item]) => item).join(" ")}`.toLowerCase();
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = "order-row grid w-full grid-cols-[42px_1fr_auto] items-center gap-3 p-4 text-left hover:bg-black/[.025]";
+        row.dataset.status = "preparing";
+        row.dataset.search = search;
+        row.dataset.channel = incomingOrder.channel.toLowerCase();
+        row.dataset.fulfilment = incomingOrder.channel.toLowerCase();
+        row.dataset.prepEnds = String(Date.now() + preparationMinutes * 60 * 1000);
+        row.dataset.nextStage = String(Date.now() + (preparationMinutes + 10) * 60 * 1000);
+        row.dataset.completeAt = String(Date.now() + (preparationMinutes + 25) * 60 * 1000);
+        row.innerHTML = `<span class="grid h-10 w-10 place-items-center rounded-lg bg-soft font-[DM_Mono] text-xs font-bold text-accent">#${String(incomingOrder.id).slice(-2)}</span><span><strong class="block text-sm">${incomingOrder.channel} <span class="ml-1 font-normal text-black/45">· ${incomingOrder.guest}</span></strong><small class="mt-1 block text-xs text-black/50">${incomingOrder.items.map(([item]) => item).join(", ")}</small></span><span class="text-right"><b class="order-time block font-[DM_Mono] text-xs text-accent">${preparationMinutes} min left</b><small class="order-status mt-1 inline-flex items-center gap-1 text-[11px] text-[#9a6b18]"><i class="h-1.5 w-1.5 rounded-full bg-[#d6a72c]"></i>Preparing</small></span>`;
+        document.querySelector("#orderList").prepend(row);
+        closeIncomingOrder();
+        updateOrders();
+      }
+      function updateLifecycle() {
+        const now = Date.now();
+        document.querySelectorAll(".order-row[data-prep-ends]").forEach((row) => {
+          let state = "preparing";
+          if (now >= Number(row.dataset.completeAt)) state = "completed";
+          else if (now >= Number(row.dataset.nextStage)) state = row.dataset.fulfilment === "delivery" ? "delivery" : "completed";
+          else if (now >= Number(row.dataset.prepEnds)) state = "pickup";
+          row.dataset.status = state;
+          const copy = statusCopy[state];
+          const time = row.querySelector(".order-time");
+          const status = row.querySelector(".order-status");
+          if (state === "preparing") time.textContent = `${Math.max(0, Math.ceil((Number(row.dataset.prepEnds) - now) / 60000))} min left`;
+          else time.textContent = state === "pickup" ? "Ready" : copy.label;
+          status.className = `order-status mt-1 inline-flex items-center gap-1 text-[11px] ${copy.tone}`;
+          status.innerHTML = `<i class="h-1.5 w-1.5 rounded-full ${copy.dot}"></i>${copy.label}`;
+        });
+        updateOrders();
+      }
+      document.querySelector("#acceptOrder").addEventListener("click", addAcceptedOrder);
+      ["#declineOrder", "#rejectOrder"].forEach((selector) => document.querySelector(selector).addEventListener("click", closeIncomingOrder));
+      setInterval(showIncomingOrder, 20000);
+      setInterval(updateLifecycle, 1000);
+      setTimeout(showIncomingOrder, 5000);
+      updateOrders();
+    </script>
+  </body>
+</html>

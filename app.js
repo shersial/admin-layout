@@ -51,18 +51,13 @@ sidebar.querySelectorAll(".sidebar-item").forEach((item) => {
 });
 
 function closePopovers() {
-  $("#branchPopover").classList.add("hidden");
+  $("#sidebarBranchPopover").classList.add("hidden");
   $("#profilePopover").classList.add("hidden");
   $("#notificationPopover").classList.add("hidden");
   $("#searchPopover").classList.add("hidden");
-  $("#searchInline").classList.add("max-w-0", "opacity-0");
-  $("#searchInline").classList.remove("max-w-[13rem]", "opacity-100");
-  $("#searchButton").classList.remove("rounded-r-lg");
-  $("#searchButton").classList.add("rounded-lg");
-  $("#branchPicker").setAttribute("aria-expanded", "false");
   $("#profileButton").setAttribute("aria-expanded", "false");
   $("#notificationButton").setAttribute("aria-expanded", "false");
-  $("#searchButton").setAttribute("aria-expanded", "false");
+  $("#commandSearch").setAttribute("aria-expanded", "false");
 }
 
 function togglePopover(trigger, popover) {
@@ -72,27 +67,20 @@ function togglePopover(trigger, popover) {
   trigger.setAttribute("aria-expanded", String(opening));
 }
 
-$("#branchPicker").addEventListener("click", () =>
-  togglePopover($("#branchPicker"), $("#branchPopover")),
-);
 $("#profileButton").addEventListener("click", () =>
   togglePopover($("#profileButton"), $("#profilePopover")),
 );
 $("#notificationButton").addEventListener("click", () =>
   togglePopover($("#notificationButton"), $("#notificationPopover")),
 );
-$("#searchButton").addEventListener("click", () => {
+function openCommandSearch() {
   const popover = $("#searchPopover");
   const opening = popover.classList.contains("hidden");
-  togglePopover($("#searchButton"), popover);
-  if (opening) {
-    $("#searchInline").classList.remove("max-w-0", "opacity-0");
-    $("#searchInline").classList.add("max-w-[13rem]", "opacity-100");
-    $("#searchButton").classList.remove("rounded-lg");
-    $("#searchButton").classList.add("rounded-r-lg");
-    $("#searchInput").focus();
-  }
-});
+  togglePopover($("#commandSearch"), popover);
+  if (opening) $("#searchInput").focus();
+}
+
+$("#commandSearch").addEventListener("click", openCommandSearch);
 
 $("#searchInput").addEventListener("input", (event) => {
   const query = event.target.value.trim().toLowerCase();
@@ -108,7 +96,7 @@ $("#searchInput").addEventListener("input", (event) => {
 document.addEventListener("click", (event) => {
   if (
     !event.target.closest(
-      "#branchPicker, #profileButton, #notificationButton, #searchButton, #branchPopover, #profilePopover, #notificationPopover, #searchPopover",
+      "#sidebarLogo, #sidebarBranchPopover, #profileButton, #notificationButton, #commandSearch, #profilePopover, #notificationPopover, #searchPopover",
     )
   )
     closePopovers();
@@ -119,9 +107,8 @@ $("#menuGroup").addEventListener("click", () => {
   const isOpen = group.getAttribute("aria-expanded") === "true";
   group.setAttribute("aria-expanded", String(!isOpen));
   $("#menuSubnav").classList.toggle("hidden", isOpen);
-  group.querySelector("i:last-child").className = isOpen
-    ? "sidebar-chevron icon-chevron-down ml-auto"
-    : "sidebar-chevron icon-chevron-up ml-auto";
+  group.querySelector("i:last-child").className =
+    "sidebar-chevron icon-chevron-down ml-auto text-sm transition-transform";
 });
 
 function togglePanel(open, opener) {
@@ -143,6 +130,9 @@ scrim.addEventListener("click", () => {
 });
 
 $("#newBooking").addEventListener("click", () =>
+  $("#bookingDialog").showModal(),
+);
+$("#dashboardBooking").addEventListener("click", () =>
   $("#bookingDialog").showModal(),
 );
 function closeMobileMenu() {
@@ -169,6 +159,11 @@ $("#mobileMenu").addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    openCommandSearch();
+    return;
+  }
   if (event.key !== "Escape") return;
   if (!panel.classList.contains("translate-x-full")) togglePanel(false);
   else if (window.innerWidth < 1024 && !sidebar.classList.contains("-translate-x-full")) {
@@ -188,11 +183,16 @@ function toggleSidebar() {
   sidebar
     .querySelector(".sidebar-brand-name")
     .classList.toggle("hidden", collapsed);
-  $("#sidebarToggle").classList.toggle("hidden", collapsed);
   sidebar
     .querySelector(".sidebar-service-status")
-    .classList.toggle("hidden", collapsed);
-  $("#menuSubnav").classList.toggle("hidden", collapsed);
+    ?.classList.toggle("hidden", collapsed);
+  $("#menuSubnav").classList.toggle(
+    "hidden",
+    collapsed || $("#menuGroup").getAttribute("aria-expanded") !== "true",
+  );
+  sidebar
+    .querySelectorAll(".sidebar-group-label, .sidebar-projects")
+    .forEach((element) => element.classList.toggle("hidden", collapsed));
   sidebar.querySelectorAll(".sidebar-item").forEach((item) => {
     item.classList.toggle("justify-center", collapsed);
     item.classList.toggle("gap-3", !collapsed);
@@ -225,5 +225,9 @@ function toggleSidebar() {
 
 $("#sidebarToggle").addEventListener("click", toggleSidebar);
 $("#sidebarLogo").addEventListener("click", () => {
-  if (sidebar.classList.contains("w-[68px]")) toggleSidebar();
+  if (sidebar.classList.contains("w-[68px]")) {
+    toggleSidebar();
+    return;
+  }
+  togglePopover($("#sidebarLogo"), $("#sidebarBranchPopover"));
 });
