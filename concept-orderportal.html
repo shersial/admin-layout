@@ -42,107 +42,110 @@
   <body class="bg-canvas font-[Inter] text-ink antialiased">
     <div class="flex min-h-screen" id="appShell">
       <aside
-        class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-black/10 bg-plum px-3 py-4 text-white transition-transform lg:static lg:translate-x-0"
+        class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-white/10 bg-plum px-2 py-3 text-white transition-[width,transform] duration-200 lg:static lg:translate-x-0"
         id="sidebar"
         aria-label="Primary navigation"
       >
-        <div class="sidebar-brand mb-8 flex h-10 items-center gap-2 px-2">
+        <div class="sidebar-brand relative mb-4 flex items-center gap-1 px-1">
           <button
-            class="grid h-8 w-8 place-items-center rounded-full bg-accent text-lg font-black"
+            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg p-2 text-left hover:bg-white/10"
             id="sidebarLogo"
-            aria-label="OrderPortal home"
+            aria-label="Switch location"
+            aria-expanded="false"
             type="button"
           >
-            O</button
-          ><strong class="sidebar-brand-name text-lg tracking-tight"
-            >OrderPortal</strong
-          ><button
-            class="ml-auto grid h-8 w-8 place-items-center rounded-lg text-white/60 hover:bg-white/10"
-            id="sidebarToggle"
-            aria-label="Collapse sidebar"
-          >
-            <i class="icon-panel-left-close"></i>
+            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent font-[DM_Mono] text-sm font-bold text-lime">O</span>
+            <span class="sidebar-brand-name min-w-0 flex-1">
+              <strong class="block truncate text-sm leading-tight">OrderPortal</strong>
+              <small class="flex items-center gap-1.5 truncate text-xs text-white/55"><i class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#7bd28e]"></i>Vela, Shoreditch</small>
+            </span>
+            <i class="sidebar-brand-name icon-chevrons-up-down text-sm text-white/55"></i>
           </button>
+          <div
+            class="absolute left-full top-0 z-50 ml-2 hidden w-56 rounded-xl border border-white/15 bg-[#5c0d35] p-2 text-white shadow-card"
+            id="sidebarBranchPopover"
+          >
+            <p class="px-2 pb-2 pt-1 font-[DM_Mono] text-[10px] uppercase tracking-wider text-white/45">Branches</p>
+            <button class="flex w-full items-center gap-3 rounded-lg bg-white/10 p-2 text-left">
+              <span class="h-2 w-2 shrink-0 rounded-full bg-[#7bd28e]"></span>
+              <span class="min-w-0 flex-1"><strong class="block truncate text-xs">Vela, Shoreditch</strong><small class="block text-[11px] text-white/55">Service live until 23:30</small></span>
+              <i class="icon-check text-sm text-lime"></i>
+            </button>
+            <button class="mt-1 flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-white/10">
+              <span class="h-2 w-2 shrink-0 rounded-full bg-[#7bd28e]"></span>
+              <span class="min-w-0 flex-1"><strong class="block truncate text-xs">Vela, Notting Hill</strong><small class="block text-[11px] text-white/55">Service live until 22:30</small></span>
+            </button>
+            <button class="mt-1 flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-white/10">
+              <span class="h-2 w-2 shrink-0 rounded-full bg-black/25"></span>
+              <span class="min-w-0 flex-1"><strong class="block truncate text-xs">Vela, Private Dining</strong><small class="block text-[11px] text-white/55">Next event at 18:30</small></span>
+            </button>
+          </div>
         </div>
-        <nav class="space-y-1">
+        <nav class="min-h-0 flex-1 space-y-4 overflow-x-hidden overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Primary navigation">
+          <section>
+            <p class="sidebar-group-label px-2 pb-2 font-[DM_Mono] text-[10px] font-medium uppercase tracking-wider text-white/40">Operations</p>
+            <div class="space-y-1">
           <a
-            class="sidebar-item flex h-11 items-center gap-3 rounded-xl bg-white px-3 text-sm font-bold text-ink"
+            class="sidebar-item flex h-9 items-center gap-3 rounded-md bg-white px-2 text-sm font-medium text-ink"
             data-tooltip="Overview"
             href="#overview"
             ><i class="icon-layout-dashboard text-lg"></i
             ><span>Overview</span></a
           >
           <a
-            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
-            data-tooltip="Orders"
-            href="#orders"
-            ><i class="icon-receipt-text text-lg"></i><span>Orders</span
+            class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Live orders"
+            href="orders.html"
+            ><i class="icon-receipt-text text-lg"></i><span>Live orders</span
             ><b
               class="ml-auto rounded-full bg-accent px-2 py-0.5 font-[DM_Mono] text-[10px] text-white"
               >12</b
             ></a
           >
           <button
-            class="sidebar-item flex h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm text-white/65 hover:bg-white/10 hover:text-white"
-            data-tooltip="Menu"
+            class="sidebar-item flex h-9 w-full items-center gap-3 rounded-md px-2 text-left text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            data-tooltip="Service book"
             id="menuGroup"
             aria-expanded="true"
           >
-            <i class="icon-utensils text-lg"></i><span>Menu</span
-            ><i class="sidebar-chevron icon-chevron-up ml-auto"></i>
+            <i class="icon-calendar-days text-lg"></i><span>Service book</span
+            ><i class="sidebar-chevron icon-chevron-down ml-auto text-sm transition-transform"></i>
           </button>
           <div
-            class="ml-10 space-y-1 pb-2 text-xs text-white/50"
+            class="ml-7 space-y-1 border-l border-white/15 pb-1 pl-4 text-xs text-white/55"
             id="menuSubnav"
           >
-            <a class="block py-1 text-lime" href="#items">Items</a
+            <a class="block py-1 font-medium text-lime" href="#items">Today's book</a
             ><a class="block py-1 hover:text-white" href="#availability"
-              >Availability</a
+              >Waitlist</a
             ><a class="block py-1 hover:text-white" href="#modifiers"
-              >Modifiers</a
+              >Floor plan</a
             >
           </div>
           <a
-            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white"
             data-tooltip="Team"
             href="#team"
             ><i class="icon-users-round text-lg"></i><span>Team</span></a
           >
           <a
-            class="sidebar-item flex h-11 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white"
             data-tooltip="Reports"
             href="#reports"
             ><i class="icon-chart-no-axes-combined text-lg"></i
             ><span>Reports</span></a
           >
+            </div>
+          </section>
+          <section class="sidebar-projects">
+            <p class="sidebar-group-label px-2 pb-2 font-[DM_Mono] text-[10px] font-medium uppercase tracking-wider text-white/40">Locations</p>
+            <div class="space-y-1">
+              <a class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" data-tooltip="Shoreditch" href="#shoreditch"><i class="icon-map-pin text-lg"></i><span>Shoreditch</span></a>
+              <a class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" data-tooltip="Notting Hill" href="#notting-hill"><i class="icon-map-pin text-lg"></i><span>Notting Hill</span></a>
+              <a class="sidebar-item flex h-9 items-center gap-3 rounded-md px-2 text-sm text-white/65 hover:bg-white/10 hover:text-white" data-tooltip="Private dining" href="#private-dining"><i class="icon-door-open text-lg"></i><span>Private dining</span></a>
+            </div>
+          </section>
         </nav>
-        <div class="mt-auto space-y-1 border-t border-white/10 pt-4">
-          <a
-            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
-            data-tooltip="Help centre"
-            href="#support"
-            ><i class="icon-circle-help text-lg"></i><span>Help centre</span></a
-          ><a
-            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-white/65 hover:bg-white/10 hover:text-white"
-            data-tooltip="Settings"
-            href="#settings"
-            ><i class="icon-settings-2 text-lg"></i><span>Settings</span></a
-          >
-          <a
-            class="sidebar-item flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-[#f6c0db] hover:bg-white/10 hover:text-white"
-            data-tooltip="Log out"
-            href="#logout"
-            ><i class="icon-log-out text-lg"></i><span>Log out</span></a
-          >
-          <div class="sidebar-service-status mt-4 rounded-xl bg-white/10 p-3">
-            <p
-              class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-lime"
-            >
-              Live service
-            </p>
-            <p class="mt-1 text-xs font-semibold">Friday 18:00 - 23:30</p>
-          </div>
-        </div>
       </aside>
 
       <div class="min-w-0 flex-1">
@@ -159,46 +162,26 @@
             <i class="icon-menu text-lg"></i>
           </button>
           <button
-            class="flex items-center gap-3 text-left"
-            id="branchPicker"
-            aria-expanded="false"
+            class="mr-2 hidden h-9 w-9 place-items-center rounded-lg text-black/55 hover:bg-black/5 lg:grid"
+            id="sidebarToggle"
+            aria-label="Collapse sidebar"
+            type="button"
           >
-            <span
-              class="h-2.5 w-2.5 rounded-full bg-[#5eac72] ring-4 ring-[#e3f4e5]"
-            ></span
-            ><span
-              ><span
-                class="block text-[10px] font-medium uppercase tracking-wider text-black/45"
-                >Current location</span
-              ><strong class="block text-sm">Vela, Shoreditch</strong></span
-            ><i class="icon-chevron-down text-sm text-black/45"></i>
+            <i class="icon-panel-left-close"></i>
+          </button>
+          <div class="hidden items-center gap-1 text-xs text-black/45 sm:flex" aria-label="Breadcrumb">
+            <span>Overview</span><i class="icon-chevron-right text-xs"></i><span>Today</span>
+          </div>
+          <button
+            class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3 rounded-lg border border-black/10 bg-[#fbfafb] px-4 py-2 text-left text-xs text-black/45 shadow-sm hover:border-accent/50 hover:text-ink lg:flex"
+            id="commandSearch"
+            aria-label="Search the whole operation"
+            aria-expanded="false"
+            type="button"
+          >
+            <i class="icon-search text-sm"></i><span>Search the whole operation</span><kbd class="rounded border border-black/10 px-1.5 py-0.5 font-[DM_Mono] text-[10px] text-black/40">Ctrl K</kbd>
           </button>
           <div class="ml-auto flex items-center gap-1.5">
-            <div class="flex items-center">
-              <div
-                class="max-w-0 overflow-hidden opacity-0 transition-all duration-200"
-                id="searchInline"
-              >
-                <label
-                  class="flex h-9 w-52 items-center gap-2 rounded-l-lg border border-r-0 border-black/10 bg-paper pl-3 text-black/45"
-                  ><i class="icon-search text-sm"></i
-                  ><input
-                    class="w-full bg-transparent pr-2 text-sm outline-none placeholder:text-black/35"
-                    id="searchInput"
-                    type="search"
-                    autocomplete="off"
-                    placeholder="Search..."
-                /></label>
-              </div>
-              <button
-                class="grid h-9 w-9 place-items-center rounded-lg text-black/60 hover:bg-black/5"
-                id="searchButton"
-                aria-label="Search"
-                aria-expanded="false"
-              >
-                <i class="icon-search"></i>
-              </button>
-            </div>
             <button
               class="relative grid h-9 w-9 place-items-center rounded-lg text-black/60 hover:bg-black/5"
               id="notificationButton"
@@ -221,7 +204,7 @@
             </button>
           </div>
           <div
-            class="absolute right-4 top-16 hidden w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-black/10 bg-paper p-3 shadow-card md:right-8"
+            class="absolute left-1/2 top-16 hidden w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-black/10 bg-paper p-3 shadow-card"
             id="searchPopover"
           >
             <p
@@ -229,6 +212,7 @@
             >
               Quick results
             </p>
+            <label class="mb-2 flex h-10 items-center gap-2 rounded-lg bg-black/5 px-3 text-black/45"><i class="icon-search text-sm"></i><input class="w-full bg-transparent text-sm outline-none placeholder:text-black/35" id="searchInput" type="search" autocomplete="off" placeholder="Search orders, menu items, and guests..." /></label>
             <div class="space-y-1" id="searchResults">
               <a
                 class="search-result flex items-center gap-3 rounded-xl p-2 hover:bg-black/5"
@@ -276,48 +260,6 @@
             >
               No matching orders, menu items, or guests.
             </p>
-          </div>
-          <div
-            class="absolute left-4 top-16 hidden w-80 rounded-2xl border border-black/10 bg-paper p-3 shadow-card md:left-8"
-            id="branchPopover"
-          >
-            <div class="mb-3 flex items-center justify-between px-1">
-              <strong class="text-sm">Switch location</strong
-              ><button class="text-xs font-semibold text-accent">Manage</button>
-            </div>
-            <label
-              class="mb-3 flex h-10 items-center gap-2 rounded-lg bg-black/5 px-3 text-black/40"
-              ><i class="icon-search"></i
-              ><input
-                class="w-full bg-transparent text-sm outline-none placeholder:text-black/35"
-                placeholder="Search locations"
-            /></label>
-            <p
-              class="px-1 font-[DM_Mono] text-[10px] uppercase tracking-wider text-black/40"
-            >
-              Recently viewed
-            </p>
-            <button
-              class="mt-2 flex w-full items-center gap-3 rounded-xl bg-soft p-2 text-left"
-            >
-              <span class="h-2 w-2 rounded-full bg-[#5eac72]"></span
-              ><span class="flex-1"
-                ><strong class="block text-xs">Vela, Shoreditch</strong
-                ><small class="text-[11px] text-black/50"
-                  >Open until 23:30</small
-                ></span
-              ><i class="icon-check text-accent"></i></button
-            ><button
-              class="mt-1 flex w-full items-center gap-3 rounded-xl p-2 text-left hover:bg-black/5"
-            >
-              <span class="h-2 w-2 rounded-full bg-black/25"></span
-              ><span
-                ><strong class="block text-xs">Vela, Notting Hill</strong
-                ><small class="text-[11px] text-black/50"
-                  >Opening at 12:00</small
-                ></span
-              >
-            </button>
           </div>
           <div
             class="absolute right-4 top-16 hidden w-60 rounded-2xl border border-black/10 bg-paper p-2 shadow-card md:right-8"
@@ -402,12 +344,101 @@
         </header>
 
         <main class="mx-auto max-w-[1600px] px-4 py-7 md:px-8">
-          <div class="flex items-center gap-1 text-xs text-black/45">
-            <span>Overview</span><i class="icon-chevron-right text-xs"></i
-            ><span>Today</span>
+          <div class="space-y-5 md:space-y-6">
+            <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p class="font-[DM_Mono] text-[10px] uppercase tracking-wider text-accent">Friday, 17 July</p>
+                <h1 class="mt-2 text-3xl font-extrabold tracking-[-.05em] md:text-4xl">Operations overview</h1>
+                <p class="mt-2 text-sm text-black/55">A live view of Vela, Shoreditch.</p>
+              </div>
+              <button class="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-white hover:bg-[#9e0e57]" id="dashboardBooking" type="button"><i class="icon-plus"></i>New booking</button>
+            </section>
+
+            <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Today at a glance">
+              <article class="rounded-xl border border-black/10 bg-paper p-5 shadow-card">
+                <p class="text-xs text-black/50">Net sales</p>
+                <strong class="mt-3 block text-2xl font-bold tracking-tight">£4,820</strong>
+                <p class="mt-4 text-xs text-black/50"><span class="font-semibold text-[#48845a]">+8.4%</span> from forecast</p>
+              </article>
+              <article class="rounded-xl border border-black/10 bg-paper p-5 shadow-card">
+                <p class="text-xs text-black/50">Covers seated</p>
+                <strong class="mt-3 block text-2xl font-bold tracking-tight">146 <span class="text-base font-medium text-black/35">/ 180</span></strong>
+                <p class="mt-4 text-xs text-black/50"><span class="font-semibold text-accent">12</span> due in the next hour</p>
+              </article>
+              <article class="rounded-xl border border-black/10 bg-paper p-5 shadow-card">
+                <p class="text-xs text-black/50">Average spend</p>
+                <strong class="mt-3 block text-2xl font-bold tracking-tight">£33.01</strong>
+                <p class="mt-4 text-xs text-black/50"><span class="font-semibold text-[#48845a]">+£2.10</span> compared with last Friday</p>
+              </article>
+              <article class="rounded-xl border border-black/10 bg-paper p-5 shadow-card">
+                <p class="text-xs text-black/50">Service health</p>
+                <strong class="mt-3 flex items-center gap-2 text-2xl font-bold tracking-tight"><i class="h-2.5 w-2.5 rounded-full bg-[#5eac72]"></i>On track</strong>
+                <p class="mt-4 text-xs text-black/50">Kitchen tickets averaging 9 min</p>
+              </article>
+            </section>
+
+            <section class="overflow-hidden rounded-xl border border-black/10 bg-paper shadow-card">
+              <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 class="text-base font-bold">Total covers</h2>
+                  <p class="mt-1 text-xs text-black/50"><span class="hidden sm:inline">Covers seated across the last 3 months</span><span class="sm:hidden">Last 3 months</span></p>
+                </div>
+                <div class="hidden rounded-lg border border-black/10 p-1 text-xs font-medium sm:flex">
+                  <button class="rounded-md bg-plum px-3 py-1.5 text-white" type="button">Last 3 months</button>
+                  <button class="rounded-md px-3 py-1.5 text-black/55 hover:bg-black/5" type="button">Last 30 days</button>
+                  <button class="rounded-md px-3 py-1.5 text-black/55 hover:bg-black/5" type="button">Last 7 days</button>
+                </div>
+                <button class="flex h-8 items-center justify-between rounded-lg border border-black/10 px-3 text-xs font-medium sm:hidden" type="button">Last 3 months <i class="ml-6 icon-chevron-down text-black/45"></i></button>
+              </div>
+              <div class="relative h-[250px] px-2 pb-8 pt-4 sm:px-6 sm:pt-6">
+                <div class="pointer-events-none absolute inset-x-6 top-6 bottom-8 grid grid-rows-4 border-b border-black/10">
+                  <i class="border-t border-black/5"></i><i class="border-t border-black/5"></i><i class="border-t border-black/5"></i><i class="border-t border-black/5"></i>
+                </div>
+                <svg class="relative h-full w-full overflow-visible" viewBox="0 0 1000 240" preserveAspectRatio="none" role="img" aria-label="Covers and sales trend rising through dinner service">
+                  <defs>
+                    <linearGradient id="salesArea" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#b81969" stop-opacity=".32"></stop>
+                      <stop offset="100%" stop-color="#b81969" stop-opacity="0"></stop>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 196 C60 184 82 164 125 174 S180 142 220 151 S280 172 320 132 S390 110 430 124 S475 76 520 98 S590 119 630 76 S704 43 744 67 S800 22 845 43 S920 15 1000 26 L1000 240 L0 240 Z" fill="url(#salesArea)"></path>
+                  <path d="M0 196 C60 184 82 164 125 174 S180 142 220 151 S280 172 320 132 S390 110 430 124 S475 76 520 98 S590 119 630 76 S704 43 744 67 S800 22 845 43 S920 15 1000 26" fill="none" stroke="#b81969" stroke-width="4" vector-effect="non-scaling-stroke"></path>
+                  <circle cx="744" cy="67" r="6" fill="#f9f804" stroke="#4a0929" stroke-width="4" vector-effect="non-scaling-stroke"></circle>
+                </svg>
+                <div class="absolute inset-x-6 bottom-2 flex justify-between font-[DM_Mono] text-[10px] text-black/40"><span>Apr 1</span><span>Apr 15</span><span>May 1</span><span>May 15</span><span>Jun 1</span><span>Jun 30</span></div>
+              </div>
+            </section>
+
+            <section class="overflow-hidden rounded-xl border border-black/10 bg-paper shadow-card">
+              <div class="flex items-center justify-between gap-3 border-b border-black/10 px-3 py-2">
+                <div class="flex min-w-0 items-center overflow-x-auto rounded-lg bg-black/[.035] p-0.5 text-xs whitespace-nowrap">
+                  <button class="rounded-md bg-paper px-2.5 py-1.5 font-semibold text-ink shadow-sm" type="button">Outline</button>
+                  <button class="rounded-md px-2.5 py-1.5 text-black/55 hover:text-ink" type="button">Past Performance <span class="ml-1 rounded-full bg-black/10 px-1.5 py-0.5 font-[DM_Mono] text-[10px] text-black/60">3</span></button>
+                  <button class="rounded-md px-2.5 py-1.5 text-black/55 hover:text-ink" type="button">Key Personnel <span class="ml-1 rounded-full bg-black/10 px-1.5 py-0.5 font-[DM_Mono] text-[10px] text-black/60">2</span></button>
+                  <button class="rounded-md px-2.5 py-1.5 text-black/55 hover:text-ink" type="button">Focus Documents</button>
+                </div>
+                <button class="hidden h-8 shrink-0 items-center gap-2 rounded-lg border border-black/10 px-3 text-xs font-semibold hover:bg-black/5 sm:inline-flex" type="button"><i class="icon-columns-3 text-sm"></i>Customize Columns<i class="icon-chevron-down text-sm text-black/45"></i></button>
+              </div>
+              <div class="flex items-center justify-between border-b border-black/10 p-5">
+                <div><h2 class="text-base font-bold">Live service</h2><p class="mt-1 text-xs text-black/50">Bookings, tables, and kitchen activity requiring attention.</p></div>
+                <button class="hidden text-xs font-semibold text-accent sm:block" type="button">View service book <i class="icon-arrow-right"></i></button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full min-w-[680px] text-left text-xs">
+                  <thead class="bg-black/[.025] font-[DM_Mono] text-[10px] uppercase tracking-wider text-black/40"><tr><th class="px-5 py-3 font-medium">Guest</th><th class="px-5 py-3 font-medium">Table</th><th class="px-5 py-3 font-medium">Covers</th><th class="px-5 py-3 font-medium">Status</th><th class="px-5 py-3 font-medium">Arrival</th><th class="px-5 py-3 font-medium"></th></tr></thead>
+                  <tbody class="divide-y divide-black/10">
+                    <tr><td class="px-5 py-4 font-semibold">James Morrison <span class="ml-2 rounded bg-soft px-1.5 py-0.5 font-[DM_Mono] text-[10px] font-medium text-accent">VIP</span></td><td class="px-5 py-4 text-black/55">14</td><td class="px-5 py-4 text-black/55">4</td><td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 text-[#48845a]"><i class="h-1.5 w-1.5 rounded-full bg-[#5eac72]"></i>Seated</span></td><td class="px-5 py-4 text-black/55">12:15</td><td class="px-5 py-4 text-right text-black/45"><i class="icon-ellipsis"></i></td></tr>
+                    <tr><td class="px-5 py-4 font-semibold">Sarah Adams</td><td class="px-5 py-4 text-black/55">06</td><td class="px-5 py-4 text-black/55">2</td><td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 text-accent"><i class="h-1.5 w-1.5 rounded-full bg-accent"></i>Arriving soon</span></td><td class="px-5 py-4 text-black/55">12:30</td><td class="px-5 py-4 text-right text-black/45"><i class="icon-ellipsis"></i></td></tr>
+                    <tr><td class="px-5 py-4 font-semibold">Daniel Norton</td><td class="px-5 py-4 text-black/55">21</td><td class="px-5 py-4 text-black/55">6</td><td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 text-[#9a6b18]"><i class="h-1.5 w-1.5 rounded-full bg-[#d6a72c]"></i>Table requested</span></td><td class="px-5 py-4 text-black/55">12:45</td><td class="px-5 py-4 text-right text-black/45"><i class="icon-ellipsis"></i></td></tr>
+                    <tr><td class="px-5 py-4 font-semibold">Amara Kim</td><td class="px-5 py-4 text-black/55">09</td><td class="px-5 py-4 text-black/55">3</td><td class="px-5 py-4"><span class="inline-flex items-center gap-1.5 text-black/55"><i class="h-1.5 w-1.5 rounded-full bg-black/35"></i>Confirmed</span></td><td class="px-5 py-4 text-black/55">13:00</td><td class="px-5 py-4 text-right text-black/45"><i class="icon-ellipsis"></i></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
           </div>
+          <div class="hidden">
           <section
-            class="mt-5 flex flex-col justify-between gap-5 md:flex-row md:items-end"
+            class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
           >
             <div>
               <p
@@ -667,6 +698,7 @@
               </div>
             </article>
           </section>
+          </div>
         </main>
         <footer
           class="flex justify-between border-t border-black/10 px-4 py-4 text-[10px] text-black/40 md:px-8"
@@ -782,6 +814,6 @@
         </div>
       </form>
     </dialog>
-    <script src="app.js"></script>
+    <script src="app.js?v=4"></script>
   </body>
 </html>
